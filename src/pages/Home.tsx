@@ -1,0 +1,77 @@
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import modernHouse from "../assets/modern-house.png";
+import fadedLogoBg from "../assets/fadedlogobg.png";
+import logoIcon from "../assets/100thlogo.png";
+
+function Home() {
+  return (
+    <div className="min-h-screen relative overflow-x-hidden text-white flex flex-col">
+      {/* House Background Image - Right Side */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+      linear-gradient(to right, #001C30 0%, #001C30 10%, transparent 70%),
+      url(${modernHouse})
+    `,
+          backgroundSize: "60% auto",
+          backgroundPosition: "right center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div>
+      {/* Faded Logo Background - Left Side */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: "#001C30",
+          backgroundImage: `url(${fadedLogoBg})`,
+          backgroundSize: "40% auto",
+          backgroundPosition: "left center",
+          backgroundRepeat: "no-repeat",
+          opacity: 1,
+          zIndex: -1,
+        }}
+      ></div>
+
+      {/* Background Elements */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 right-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Main Content */}
+      <main className="relative z-10 flex items-center min-h-screen pt-28">
+        <div className="container mx-auto px-8">
+          <div className="max-w-2xl">
+            {/* Welcome Text */}
+            <div className="flex items-center space-x-3 text-white/70 font-medium tracking-widest text-3xl">
+              <img src={logoIcon} alt="100th Floor" className="h-8 w-auto" />
+              <span>WELCOME TO 100TH FLOOR</span>
+            </div>
+
+            {/* Main Heading */}
+            <div className="space-y-2 mb-8">
+              <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                Discover Your
+                <br />
+                Dream <span style={{ color: "#176B87" }}>Home</span>
+              </h1>
+            </div>
+
+            {/* Description */}
+            <p className="text-white text-lg leading-relaxed max-w-lg mb-8">where the future of architecture intertwines with sustainability to create transformative spaces. we are pioneers in crafting environments that enhance human interactions and respect our planet.</p>
+
+            {/* CTA Button */}
+            <Button className="bg-primary hover:bg-primary-foreground text-white h-auto w-3xs py-5 text-xl font-medium rounded-lg group transition-all duration-300">
+              Contact Us
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
+            </Button>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default Home;
