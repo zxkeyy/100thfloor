@@ -60,7 +60,7 @@ export default function ImageCarousel() {
           }
 
           return (
-            <div key={slide.id} className={`w-[80%] absolute inset-0 transition-all duration-500 ease-in-out transform ${position} ${zIndex} ${scale} bg-red-500`}>
+            <div key={slide.id} className={`w-[80%] absolute inset-0 transition-all duration-500 ease-in-out transform ${position} ${zIndex} ${scale}`}>
               <div className="relative w-[226px] md:w-[280px] lg:w-[437px] h-[323px] md:h-[400px] lg:h-[623px] overflow-hidden shadow-[0_0_40px_0_rgba(44,151,234,0.1)]">
                 {/* Image */}
                 <img src={slide.image} alt={slide.title} className="w-[226px] md:w-[280px] lg:w-[437px] h-[323px] md:h-[400px] lg:h-[623px] object-cover" />
