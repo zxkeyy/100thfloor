@@ -1,7 +1,9 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
-import logoIcon from "../assets/100thlogo.png";
-import logoText from "../assets/100thlogotext.png";
+import Image from "next/image";
+import logoIcon from "@/public/100thlogo.png";
+import logoText from "@/public/100thlogotext.png";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -41,8 +43,8 @@ export function Navbar() {
       <div className="flex items-center justify-between py-6 max-w-[1400px] w-full">
         {/* Logo */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection("home")}>
-          <img src={logoIcon} alt="100th Floor" className="h-14 w-auto" />
-          <img src={logoText} alt="100th Floor" className="h-12 w-auto" />
+          <Image src={logoIcon} alt="100th Floor" width={56} height={56} className="h-14 w-auto" />
+          <Image src={logoText} alt="100th Floor" width={150} height={48} className="h-12 w-auto" />
         </div>
 
         {/* Navigation */}

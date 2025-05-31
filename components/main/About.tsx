@@ -1,10 +1,12 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CirclePlay } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import house1 from "../assets/house1.png";
-import house2 from "../assets/house2.png";
-import house3 from "../assets/house3.png";
+import house1 from "@/public/house1.png";
+import house2 from "@/public/house2.png";
+import house3 from "@/public/house3.png";
 import { useState } from "react";
+import Image from "next/image";
 
 function About() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +26,7 @@ function About() {
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
                 9876, Boulevard Goldington, TX 12345 US
               </span>
-              <img src={house2} alt="House 2" className="h-full w-auto ml-[5%]" />
+              <Image src={house2} alt="House 2" className="h-full w-auto ml-[5%]" />
             </div>
             <div className="flex justify-end items-end h-[45%]">
               {/* Left vertical text */}
@@ -34,7 +36,7 @@ function About() {
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
                 5678 CY, Cedar Heights, NY 54321, US
               </span>
-              <img src={house3} alt="House 3" className="h-full w-auto ml-[5%]" />
+              <Image src={house3} alt="House 3" className="h-full w-auto ml-[5%]" />
             </div>
           </div>
           <div style={{ backgroundColor: "green" }} className="w-[28%]">
@@ -52,7 +54,7 @@ function About() {
 
                 <p>At Arockt, we are constantly exploring new horizons in architecture and sustainability. We invite you to join us as we continue to design not just buildings, but better futures. Whether you are a potential client, a future team member, or someone interested in sustainable architecture, connect with us and be a part of our journey to make the world a better place through thoughtful and innovative design.</p>
 
-                <p className="font-medium text-white">Together, let's build the future.</p>
+                <p className="font-medium text-white">Together, let&apos;s build the future.</p>
               </div>
 
               {/* CTA Button */}
@@ -67,7 +69,8 @@ function About() {
           <div className="w-[40%]">
             <div className="flex h-2/3 mt-5">
               <div className="h-full mr-[5%] relative">
-                <img src={house1} alt="House 1" className="h-full w-auto" />
+                <Image src={house1} alt="House 1" className="h-full w-auto" />
+
                 <div
                   style={{
                     position: "absolute",

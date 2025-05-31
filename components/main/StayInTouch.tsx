@@ -1,5 +1,7 @@
+"use client";
 import { useState } from "react";
-import Image from "../assets/Rectangle 21.png";
+import Image from "next/image";
+import bgImage from "@/public/Rectangle 21.png";
 
 function StayInTouch() {
   const [email, setEmail] = useState("");
@@ -19,22 +21,22 @@ function StayInTouch() {
   return (
     <section className="relative min-h-[750px] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${Image})`,
-          backgroundColor: "#1e293b", // Fallback color
-        }}
-      />
-
-      {/* Faded Logo Background */}
+      <div className="absolute inset-0">
+        <Image src={bgImage} alt="Contact Background" fill priority className="object-cover" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: "rgba(30, 41, 59, 0.1)",
+          }}
+        />
+      </div>
 
       {/* Content Container */}
       <div className="relative z-10 w-[70%] mx-auto px-6 text-center">
         {/* Backdrop Blur Card */}
         <div style={{ backgroundColor: "#11182780" }} className=" backdrop-blur-sm rounded-4xl p-8 md:py-25 border border-white/10">
           {/* Main Heading */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Let's Stay In Touch</h2>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Let&apos;s Stay In Touch</h2>
 
           {/* Subtitle */}
           <p className="text-white text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>

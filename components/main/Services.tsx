@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import logoIcon from "../assets/100thlogo.png";
+import logoIcon from "@/public/100thlogo.png";
 import { ArrowRight } from "lucide-react";
 import ImageCarousel from "@/components/Carousel";
+import Image from "next/image";
 function Services() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -12,7 +13,8 @@ function Services() {
         <div className="flex items-center">
           <div className="w-[50%] flex flex-col justify-center ">
             <div className="flex items-center space-x-3 text-gray-500 tracking-widest text-3xl mb-5">
-              <img src={logoIcon} alt="100th Floor" style={{ color: "#176B87" }} className="h-8 w-auto" />
+              <Image src={logoIcon} alt="100th Floor" style={{ color: "#176B87" }} className="h-8 w-auto" width={32} height={32} />
+
               <span>OUR SERVICES</span>
             </div>
             <div className="mb-4">

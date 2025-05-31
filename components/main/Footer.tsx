@@ -1,6 +1,7 @@
 import { Facebook, Twitter } from "lucide-react";
-import logoIcon from "../assets/100thlogo.png";
-import logoText from "../assets/100thlogotext.png";
+import Image from "next/image";
+import logoIcon from "@/public/100thlogo.png";
+import logoText from "@/public/100thlogotext.png";
 
 function Footer() {
   const footerLinks = {
@@ -52,10 +53,9 @@ function Footer() {
           {/* Brand Section */}
           <div className="col-span-2">
             {/* Logo */}
-            {/* Logo */}
             <div className="flex items-center gap-3 mb-4">
-              <img src={logoIcon} alt="100th Floor" className="h-14 w-auto" />
-              <img src={logoText} alt="100th Floor" className="h-12 w-auto" />
+              <Image src={logoIcon} alt="100th Floor" width={56} height={56} className="h-14 w-auto object-contain" />
+              <Image src={logoText} alt="100th Floor" width={100} height={100} className="h-12 w-auto object-contain" />
             </div>
 
             {/* Description */}

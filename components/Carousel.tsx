@@ -1,8 +1,10 @@
+"use client";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import image1 from "../assets/Rectangle 6.png";
-import image2 from "../assets/Rectangle 7.png";
-import image3 from "../assets/Rectangle 8.png";
+import Image from "next/image";
+import image1 from "@/public/Rectangle 6.png";
+import image2 from "@/public/Rectangle 7.png";
+import image3 from "@/public/Rectangle 8.png";
 
 export default function ImageCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -62,8 +64,7 @@ export default function ImageCarousel() {
           return (
             <div key={slide.id} className={`w-[80%] absolute inset-0 transition-all duration-500 ease-in-out transform ${position} ${zIndex} ${scale}`}>
               <div className="relative w-[226px] md:w-[280px] lg:w-[437px] h-[323px] md:h-[400px] lg:h-[623px] overflow-hidden shadow-[0_0_40px_0_rgba(44,151,234,0.1)]">
-                {/* Image */}
-                <img src={slide.image} alt={slide.title} className="w-[226px] md:w-[280px] lg:w-[437px] h-[323px] md:h-[400px] lg:h-[623px] object-cover" />
+                <Image src={slide.image} alt={slide.title} fill className="object-cover" priority={index === currentIndex} />
 
                 {/* White overlay */}
                 <div className={`absolute inset-0 transition-colors duration-500 ${overlay}`} />

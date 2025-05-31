@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import modernHouse from "../assets/modern-house.png";
-import fadedLogoBg from "../assets/fadedlogobg.png";
-import logoIcon from "../assets/100thlogo.png";
+import Image from "next/image";
+import modernHouse from "@/public/modern-house.png";
+import fadedLogoBg from "@/public/fadedlogobg.png";
+import logoIcon from "@/public/100thlogo.png";
 
 function Home() {
   return (
@@ -13,7 +14,7 @@ function Home() {
         style={{
           background: `
       linear-gradient(to right, #001C30 0%, #001C30 10%, transparent 70%),
-      url(${modernHouse})
+      url(${modernHouse.src})
     `,
           backgroundSize: "60% auto",
           backgroundPosition: "right center",
@@ -25,7 +26,7 @@ function Home() {
         className="absolute inset-0"
         style={{
           backgroundColor: "#001C30",
-          backgroundImage: `url(${fadedLogoBg})`,
+          backgroundImage: `url(${fadedLogoBg.src})`,
           backgroundSize: "40% auto",
           backgroundPosition: "left center",
           backgroundRepeat: "no-repeat",
@@ -41,12 +42,12 @@ function Home() {
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 flex items-center min-h-screen max-w-[1400px] w-full pt-28">
+      <div className="relative z-10 flex items-center min-h-screen max-w-[1400px] w-full pt-28">
         <div className="container mx-auto ">
           <div className="max-w-2xl">
             {/* Welcome Text */}
             <div className="flex items-center space-x-3 text-white/70 font-medium tracking-widest text-3xl">
-              <img src={logoIcon} alt="100th Floor" className="h-8 w-auto" />
+              <Image src={logoIcon} alt="100th Floor" className="h-8 w-auto" width={32} height={32} />
               <span>WELCOME TO 100TH FLOOR</span>
             </div>
 
@@ -69,7 +70,7 @@ function Home() {
             </Button>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
