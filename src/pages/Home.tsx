@@ -6,7 +6,7 @@ import logoIcon from "../assets/100thlogo.png";
 
 function Home() {
   return (
-    <div className="min-h-screen relative overflow-x-hidden text-white flex flex-col">
+    <div className="min-h-screen items-center relative overflow-x-hidden text-white flex flex-col">
       {/* House Background Image - Right Side */}
       <div
         className="absolute inset-0"
@@ -41,8 +41,8 @@ function Home() {
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 flex items-center min-h-screen pt-28">
-        <div className="container mx-auto px-8">
+      <main className="relative z-10 flex items-center min-h-screen max-w-[1400px] w-full pt-28">
+        <div className="container mx-auto ">
           <div className="max-w-2xl">
             {/* Welcome Text */}
             <div className="flex items-center space-x-3 text-white/70 font-medium tracking-widest text-3xl">
@@ -63,7 +63,7 @@ function Home() {
             <p className="text-white text-lg leading-relaxed max-w-lg mb-8">where the future of architecture intertwines with sustainability to create transformative spaces. we are pioneers in crafting environments that enhance human interactions and respect our planet.</p>
 
             {/* CTA Button */}
-            <Button className="bg-primary hover:bg-primary-foreground text-white h-auto w-3xs py-5 text-xl font-medium rounded-lg group transition-all duration-300">
+            <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-3xs py-4 text-xl font-medium rounded-sm group transition-all duration-300">
               Contact Us
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
             </Button>

@@ -80,7 +80,7 @@ export default function ImageCarousel() {
 
       {/* Navigation arrows */}
 
-      <button onClick={nextSlide} className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-40">
+      <button onClick={nextSlide} className="cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-40">
         <ChevronRight className="w-6 h-6 text-gray-600" />
       </button>
     </div>

@@ -57,7 +57,7 @@ function About() {
 
               {/* CTA Button */}
               <div className="mt-8 pt-4">
-                <Button className="w-full h-12 text-lg bg-transparent border border-primary text-primary hover:bg-primary hover:text-slate-800 py-3 px-6 rounded transition-all duration-300 flex items-center justify-center space-x-2 font-medium group transition-all duration-300">
+                <Button className="w-full h-12 text-lg bg-transparent border border-primary text-primary cursor-pointer hover:bg-primary hover:text-slate-800 py-3 px-6 rounded transition-all duration-300 flex items-center justify-center space-x-2 font-medium group transition-all duration-300">
                   Contact Us
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
                 </Button>

@@ -7,6 +7,7 @@ function Services() {
     <div className="min-h-screen flex flex-col items-center justify-center">
       {/* NavBar Spacer */}
       <div className="w-full h-25" />
+
       <div className="max-w-[1400px] w-full">
         <div className="flex items-center">
           <div className="w-[50%] flex flex-col justify-center ">
@@ -26,7 +27,7 @@ function Services() {
               </div>
               <p className="text-gray-500 text-lg  leading-relaxed max-w-lg">At Arockt, where each project embodies our commitment to innovation, sustainability, and architectural excellence. Dive into our diverse portfolio, showcasing a blend of aesthetics, functionality, and environmentally conscious design across various domains.</p>
             </div>
-            <Button className="bg-primary hover:bg-primary-foreground text-white h-auto w-xs py-3 text-xl font-medium rounded-sm group transition-all duration-300">
+            <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-xs py-3 text-xl font-medium rounded-sm group transition-all duration-300">
               Book Our Services
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
             </Button>

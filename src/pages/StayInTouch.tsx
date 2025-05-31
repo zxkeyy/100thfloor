@@ -44,7 +44,7 @@ function StayInTouch() {
             <div className="flex flex-col sm:flex-row">
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" className="flex-1 px-6 py-4 rounded-l-md bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 border-0 focus:ring-2 focus:ring-white/50 focus:outline-none transition-all duration-300" />
               <div className="rounded-r-md bg-white/95 p-2">
-                <button onClick={handleSubmit} disabled={isSubscribed} className="px-8 py-3 bg-primary-foreground hover:bg-primary text-white font-semibold rounded-md transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-white/50 focus:outline-none disabled:opacity-50 disabled:transform-none">
+                <button onClick={handleSubmit} disabled={isSubscribed} className="px-8 py-3 bg-primary-foreground cursor-pointer hover:bg-primary text-white font-semibold rounded-md transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-white/50 focus:outline-none disabled:opacity-50 disabled:transform-none">
                   {isSubscribed ? "Subscribed!" : "Subscribe"}
                 </button>
               </div>
