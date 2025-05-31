@@ -30,7 +30,7 @@ export function Sidenav() {
   };
 
   return (
-    <div className="bg-black/40 fixed p-5 right-0 top-1/2 -translate-y-1/2 z-20 space-y-6">
+    <div className="bg-black/40 fixed p-5 right-0 top-1/2 -translate-y-1/2 z-100 space-y-6">
       <div onClick={() => scrollToSection("home")} className={`${activeSection === "home" ? "text-primary" : "text-white/80"} text-lg font-light cursor-pointer hover:text-white transition-colors`}>
         01
       </div>

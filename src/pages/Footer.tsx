@@ -46,11 +46,11 @@ function Footer() {
     },
   };
   return (
-    <footer style={{ backgroundColor: "#02131A" }} className="text-white">
+    <footer style={{ backgroundColor: "#02131A" }} className="text-white w-full">
       <div className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-6 gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
+          <div className="col-span-2">
             {/* Logo */}
             {/* Logo */}
             <div className="flex items-center gap-3 mb-4">
@@ -77,7 +77,7 @@ function Footer() {
 
           {/* Links Columns */}
           {Object.entries(footerLinks).map(([key, section]) => (
-            <div key={key} className="lg:col-span-1 flex justify-end">
+            <div key={key} className="col-span-1 flex justify-end">
               <div>
                 <h3 className="font-semibold text-white mb-4">{section.title}</h3>
                 <ul className="space-y-3">

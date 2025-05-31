@@ -87,9 +87,6 @@ export function Navbar() {
           >
             Portfolio
           </a>
-          <a href="#" className="text-white/70 hover:text-cyan-400 transition-colors font-medium">
-            Blog
-          </a>
         </nav>
 
         {/* Right side */}
