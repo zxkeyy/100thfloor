@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import DOMPurify from "dompurify";
 
 interface BlogPost {
   id: string;
@@ -21,6 +22,24 @@ interface ApiResponse {
   post: BlogPost;
   relatedPosts: BlogPost[];
 }
+
+const comments = [
+  {
+    id: 1,
+    text: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
+    timeAgo: "5 min ago",
+  },
+  {
+    id: 2,
+    text: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
+    timeAgo: "5 min ago",
+  },
+  {
+    id: 3,
+    text: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
+    timeAgo: "5 min ago",
+  },
+];
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -132,13 +151,64 @@ export default function BlogPostPage() {
         </header>
 
         {/* Article content */}
-        <article className="text-[1.1rem] leading-[1.8] text-[#333] mb-[50px]">
-          {post.content.split("\n").map((paragraph, index) => (
-            <p key={index} className="mb-[20px]">
-              {paragraph}
-            </p>
-          ))}
-        </article>
+        <article className="text-[1.1rem] leading-[1.8] text-[#333] mb-[50px]" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} />
+
+        {/* Comments section */}
+        <div className="mx-auto bg-black/1 p-12 rounded-lg border border-gray-100 border-2">
+          {/* Comments List */}
+          <div className="space-y-6 mb-6">
+            {comments.map((comment) => (
+              <div key={comment.id} className="flex gap-3">
+                {/* Avatar */}
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-slate-600 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Comment Content */}
+                <div className="flex-1">
+                  <p className="text-gray-700 text-sm leading-relaxed mb-2">{comment.text}</p>
+                  <p className="text-gray-400 text-xs">{comment.timeAgo}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Comment Input Section */}
+          <div className="mt-4">
+            <div className="flex gap-3">
+              {/* Input Area */}
+              <div className="flex-1 min-w-0 ">
+                <div className="border border-gray-200 rounded-lg shadow-xl bg-white overflow-hidden">
+                  <div className="flex px-3">
+                    <div
+                      contentEditable
+                      className="flex-1 min-w-0 p-3 outline-none text-sm text-gray-700 min-h-20 resize-none"
+                      style={{
+                        wordWrap: "break-word",
+                        overflowWrap: "break-word",
+                        whiteSpace: "pre-wrap",
+                        maxWidth: "100%",
+                        overflow: "hidden",
+                        textOverflow: "clip",
+                        wordBreak: "break-word",
+                      }}
+                      suppressContentEditableWarning={true}
+                      data-placeholder="Write a comment..."
+                    />
+                    {/* Comment Button */}
+                    <div className="flex items-center p-2">
+                      <button className="px-4 py-3 bg-gray-400 text-white text-sm rounded-lg hover:bg-gray-500 transition-colors whitespace-nowrap">Comment</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
