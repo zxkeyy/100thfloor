@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import DOMPurify from "dompurify";
+import fallbackImage from "@/public/fallback-image.png";
 
 interface BlogPost {
   id: string;
@@ -206,6 +207,39 @@ export default function BlogPostPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* You May Like This Section */}
+      <div className="mt-[50px] p-10 flex justify-center">
+        <div className="w-full bg-gray-100 py-10 flex justify-center">
+          <div className="w-full max-w-[1400px]">
+            <h2 className="text-[1.8rem] font-bold mb-[20px]">You May Like This:</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px]">
+              {relatedPosts.map((post) => (
+                <div key={post.id}>
+                  <Link href={`/blog/${post.slug}`} className="no-underline text-[#333]">
+                    {post.image ? <img src={post.image} alt={post.title} className="w-full h-[250px] object-cover rounded-[4px] mb-[10px]" /> : <img src={fallbackImage.src} alt="Fallback" className="w-full h-[250px] object-cover rounded-[4px] mb-[10px]" />}
+                    <h3 className="text-[1.2rem] font-semibold mb-[10px]">{post.title}</h3>
+                    <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+                      <span>
+                        By<span className="font-bold"> {post.authorName}</span>
+                      </span>
+                      <span>•</span>
+                      <time>
+                        {new Date(post.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </time>
+                      <span>•</span>
+                      <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+                    </div>
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 import { Fade } from "@/components/Fade";
 import About from "@/components/main/About";
-import Footer from "@/components/main/Footer";
 import Home from "@/components/main/Home";
 import Portfolio from "@/components/main/Portfolio";
 import Services from "@/components/main/Services";
@@ -28,7 +27,6 @@ export default function Page() {
       <section id="contact">
         <StayInTouch />
       </section>
-      <Footer />
     </>
   );
 }
