@@ -85,7 +85,7 @@ export default function BlogPage() {
     <>
       {/* NavBar Spacer */}
       <div className="w-full h-25" />
-      <div style={{ maxWidth: "1400px", margin: "50px auto", padding: "20px" }}>
+      <div style={{ maxWidth: "1400px", margin: "50px auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px" }}>
           <Link
             href="/blog/submit"
@@ -183,6 +183,122 @@ export default function BlogPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div style={{ maxWidth: "1400px" }} className="flex flex-col items-center mx-auto mt-18">
+        <div className="grid grid-cols-2 grid-rows-3 grid-flow-col h-[700px] gap-18">
+          {posts.slice(0, 3).map((post) => (
+            <div key={post.id} className=" w-full">
+              <Link href={`/blog/${post.slug}`} className="no-underline text-[#333] flex h-full w-full">
+                <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-[80%] h-full object-cover rounded-[4px] mb-[10px]" />
+                <div className="py-8 pl-8 w-full overflow-hidden text-ellipsis">
+                  <h3 className="text-xl text-black leading-8 font-semibold mb-[10px] w-full overflow-hidden text-ellipsis">{post.title}</h3>
+                  <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+                    <span>
+                      By<span className="font-bold"> {post.authorName}</span>
+                    </span>
+                    <span>•</span>
+                    <time>
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <span>•</span>
+                    <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+          {posts.slice(0, 1).map((post) => (
+            <div key={post.id} className="row-span-3">
+              <Link href={`/blog/${post.slug}`} className="no-underline text-[#333]">
+                <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-[400px] object-cover rounded-[4px] mb-[10px]" />
+                <h3 className="text-5xl text-black leading-16 font-semibold mb-[10px]">{post.title}</h3>
+                <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem]">
+                  <span>
+                    By<span className="font-bold"> {post.authorName}</span>
+                  </span>
+                  <span>•</span>
+                  <time>
+                    {new Date(post.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <span>•</span>
+                  <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-[50px] p-10 flex justify-center">
+        <div className="w-full bg-gray-100 py-30 flex justify-center">
+          <div className="w-full max-w-[1400px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-20">
+              {posts.slice(0, 3).map((post) => (
+                <div key={post.id}>
+                  <Link href={`/blog/${post.slug}`} className="no-underline text-[#333]">
+                    <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-[250px] object-cover rounded-[4px] mb-[10px]" />
+                    <h3 className="text-2xl text-black leading-8 font-semibold mb-[10px]">{post.title}</h3>
+                    <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+                      <span>
+                        By<span className="font-bold"> {post.authorName}</span>
+                      </span>
+                      <span>•</span>
+                      <time>
+                        {new Date(post.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </time>
+                      <span>•</span>
+                      <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: "1400px" }} className="flex flex-col items-center mx-auto mt-18">
+        <div className="grid grid-cols-2 gap-18">
+          {posts.map((post) => (
+            <div key={post.id} className=" w-full">
+              <Link href={`/blog/${post.slug}`} className="no-underline text-[#333] flex h-full w-full">
+                <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-[80%] h-full object-cover rounded-[4px] mb-[10px]" />
+                <div className="py-8 pl-8 w-full overflow-hidden text-ellipsis">
+                  <h3 className="text-xl text-black leading-8 font-semibold mb-[10px] w-full overflow-hidden text-ellipsis">{post.title}</h3>
+                  <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+                    <span>
+                      By<span className="font-bold"> {post.authorName}</span>
+                    </span>
+                    <span>•</span>
+                    <time>
+                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <span>•</span>
+                    <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+        <div className="my-10 border-3 rounded-full py-5 px-20 cursor-pointer border-primary-foreground text-primary-foreground font-bold">VIEW MORE POSTS</div>
       </div>
 
       {posts.length === 0 ? (
