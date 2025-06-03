@@ -113,22 +113,6 @@ export default function BlogPage() {
         <>
           {/* Section 1 - Hero Section: Posts 1-4 */}
           <div style={{ maxWidth: "1400px", margin: "50px auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px" }}>
-              <Link
-                href="/blog/submit"
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "white",
-                  padding: "12px 24px",
-                  textDecoration: "none",
-                  borderRadius: "4px",
-                  fontWeight: "bold",
-                }}
-              >
-                Write a Post
-              </Link>
-            </div>
-
             {posts.length > 0 && (
               <div className="grid grid-cols-2 grid-rows-3 h-[700px] gap-18">
                 {/* First post gets prominent display */}
