@@ -24,10 +24,29 @@ export async function POST(request: Request) {
     const { title, content, authorName, authorEmail, authorPhoneNumber, image } = await request.json();
 
     // Create URL-friendly slug from title
-    const slug = title
+    const baseSlug = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
+
+    // Ensure slug uniqueness
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+      const existingPost = await prisma.blogPost.findFirst({
+        where: { slug },
+      });
+
+      if (!existingPost) {
+        // Slug is unique, we can use it
+        break;
+      }
+
+      // Slug exists, try with a counter
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
 
     const post = await prisma.blogPost.create({
       data: {
