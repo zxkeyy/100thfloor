@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import "../../../styles/_variables.scss";
 import "../../../styles/_keyframe-animations.scss";
 import { Image } from "lucide-react";
+import DOMPurify from "dompurify";
 
 // Import validation constants from the service
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
@@ -30,6 +31,9 @@ export default function SubmitBlogPost() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  // Preview state
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   // Modal states
   const [showAuthorModal, setShowAuthorModal] = useState(false);
@@ -321,219 +325,162 @@ export default function SubmitBlogPost() {
   // Main blog form
   return (
     <>
-      <div style={{ maxWidth: "1200px", margin: "50px auto", padding: "20px" }}>
-        {message && (
-          <div
-            style={{
-              backgroundColor: "#d4edda",
-              color: "#155724",
-              padding: "15px",
-              borderRadius: "5px",
-              marginBottom: "20px",
-              border: "1px solid #c3e6cb",
-            }}
-          >
-            {message}
-          </div>
-        )}
+      {!isPreviewMode ? (
+        // Edit Mode
+        <div className="max-w-[1200px] mx-auto my-[50px] p-5">
+          {message && <div className="bg-green-100 text-green-800 p-4 rounded mb-5 border border-green-200">{message}</div>}
 
-        {error && (
-          <div
-            style={{
-              backgroundColor: "#f8d7da",
-              color: "#721c24",
-              padding: "15px",
-              borderRadius: "5px",
-              marginBottom: "20px",
-              border: "1px solid #f5c6cb",
-            }}
-          >
-            {error}
-          </div>
-        )}
+          {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-5 border border-red-200">{error}</div>}
 
-        <form onSubmit={handleBlogSubmit}>
-          <div style={{ marginBottom: "20px" }} className="flex justify-center w-full">
-            <textarea
-              id="title"
-              name="title"
-              rows={1}
-              value={formData.title}
-              onChange={handleInputChange}
-              placeholder="Title..."
-              required
-              style={{
-                minHeight: "1.2em",
-                height: "auto",
-              }}
-              onInput={(e) => {
-                const target = e.target as HTMLTextAreaElement;
-                target.style.height = "auto";
-                target.style.height = target.scrollHeight + "px";
-              }}
-              className="text-[46px] text-center font-bold outline-none resize-none overflow-hidden"
-            />
-          </div>
+          <form onSubmit={handleBlogSubmit}>
+            <div className="flex justify-center w-full mb-5">
+              <textarea
+                id="title"
+                name="title"
+                rows={1}
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="Title..."
+                required
+                className="text-[46px] text-center font-bold outline-none resize-none overflow-hidden w-full"
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = "auto";
+                  target.style.height = target.scrollHeight + "px";
+                }}
+              />
+            </div>
 
-          <div style={{ marginBottom: "30px" }}>
-            {/* Hidden file input */}
-            <input type="file" id="imageFile" accept="image/*" onChange={handleImageChange} style={{ display: "none" }} />
+            <div className="mb-8">
+              {/* Hidden file input */}
+              <input type="file" id="imageFile" accept="image/*" onChange={handleImageChange} className="hidden" />
 
-            {/* Custom styled div that triggers file input */}
-            <div
-              onClick={() => document.getElementById("imageFile")?.click()}
-              style={{
-                width: "100%",
-                padding: imagePreview ? "0" : "40px 20px",
-                border: imagePreview ? "none" : "2px dashed #ccc",
-                borderRadius: "8px",
-                fontSize: "16px",
-                boxSizing: "border-box",
-                backgroundColor: imagePreview ? "transparent" : "#f9f9f9",
-                textAlign: "center",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                color: "#666",
-                position: "relative",
-                minHeight: imagePreview ? "200px" : "auto",
-              }}
-              onMouseEnter={(e) => {
-                if (!imagePreview) {
-                  e.currentTarget.style.borderColor = "#007bff";
-                  e.currentTarget.style.backgroundColor = "#f0f8ff";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!imagePreview) {
-                  e.currentTarget.style.borderColor = "#ccc";
-                  e.currentTarget.style.backgroundColor = "#f9f9f9";
-                }
-              }}
-              className="hover:border-blue-500 hover:bg-blue-50 flex justify-center items-center "
-            >
-              {imagePreview ? (
-                <>
-                  <img
-                    src={imagePreview}
-                    alt="Image preview"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      borderRadius: "6px",
-                      maxHeight: "400px",
-                    }}
-                  />
+              {/* Custom styled div that triggers file input */}
+              <div
+                onClick={() => document.getElementById("imageFile")?.click()}
+                className={`
+                  w-full ${imagePreview ? "p-0" : "p-[40px_20px]"} 
+                  ${imagePreview ? "border-none" : "border-2 border-dashed border-gray-300"} 
+                  rounded-lg text-base box-border 
+                  ${imagePreview ? "bg-transparent" : "bg-gray-50"} 
+                  text-center cursor-pointer transition-all duration-300 text-gray-500 relative
+                  ${imagePreview ? "min-h-[200px]" : ""}
+                  hover:border-blue-500 hover:bg-blue-50 flex justify-center items-center
+                `}
+              >
+                {imagePreview ? (
+                  <>
+                    <img src={imagePreview} alt="Image preview" className="w-full h-full object-cover rounded-lg max-h-[400px]" />
 
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setImageFile(null);
-                      setImagePreview("");
-                      setError("");
-                    }}
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      background: "rgba(220, 53, 69, 0.9)",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "50%",
-                      width: "30px",
-                      height: "30px",
-                      cursor: "pointer",
-                      fontSize: "18px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      transition: "background 0.3s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(220, 53, 69, 1)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(220, 53, 69, 0.9)";
-                    }}
-                    title="Remove image"
-                  >
-                    ×
-                  </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImageFile(null);
+                        setImagePreview("");
+                        setError("");
+                      }}
+                      className="
+                        absolute top-[10px] right-[10px] bg-[rgba(220,53,69,0.9)] text-white
+                        border-none rounded-full w-[30px] h-[30px] cursor-pointer text-lg
+                        flex items-center justify-center transition-all duration-300
+                        hover:bg-[rgba(220,53,69,1)]
+                      "
+                      title="Remove image"
+                    >
+                      ×
+                    </button>
 
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: "10px",
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      background: "rgba(0, 0, 0, 0.7)",
-                      color: "white",
-                      padding: "5px 10px",
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                      opacity: "0.8",
-                    }}
-                  >
-                    Click to change image
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Image size={50} />
-                  <p>Add showcase image</p>
-                </>
+                    <div className="absolute bottom-[10px] left-1/2 transform -translate-x-1/2 bg-[rgba(0,0,0,0.7)] text-white py-1 px-2 rounded text-xs opacity-80">Click to change image</div>
+                  </>
+                ) : (
+                  <>
+                    <Image size={50} />
+                    <p>Add showcase image</p>
+                  </>
+                )}
+              </div>
+
+              <small className="text-gray-500 block mt-1">Upload an image file (JPEG, PNG, GIF, WebP) - Max 3MB. Images will be automatically optimized and securely stored.</small>
+            </div>
+
+            <div className="mb-5">
+              <div className="border border-gray-300 rounded min-h-[500px] overflow-auto">
+                <SimpleEditor content={formData.content} onChange={handleEditorChange} placeholder="Write your blog post content here..." />
+              </div>
+              <small className="text-gray-500 block mt-1">Minimum 100 characters recommended for a quality post.</small>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <button type="button" onClick={() => setIsPreviewMode(true)} className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer">
+                PREVIEW
+              </button>
+              <button type="submit" disabled={uploadingImage} className="rounded-full py-5 px-15 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer disabled:cursor-not-allowed">
+                PUBLISH NOW
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        // Preview Mode - Styled exactly like the real blog post page
+        <>
+          {/* NavBar Spacer */}
+          <div className="w-full h-25" />
+          <div className="max-w-[1100px] mx-auto my-[50px] p-[20px]">
+            {/* Back to edit button */}
+            <div className="mb-[30px]">
+              <button onClick={() => setIsPreviewMode(false)} className="text-primary no-underline text-[0.9rem] hover:underline bg-transparent border-none cursor-pointer">
+                ← Back to Edit
+              </button>
+            </div>
+
+            {/* Article header */}
+            <header className="mb-[40px]">
+              <h1 className="text-[2.5rem] leading-[1.2] mt-0 mr-0 mb-[20px] ml-0 text-[#333] text-center font-bold">{formData.title || "Your Blog Title"}</h1>
+
+              <div className="flex items-center justify-end gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+                <span>
+                  By<span className="font-bold"> {formData.authorName || "Your Name"}</span>
+                </span>
+                <span>•</span>
+                <time>
+                  {new Date().toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <span>•</span>
+                <span>{Math.ceil((formData.content?.split(" ").length || 0) / 200) || 1} min read</span>
+              </div>
+
+              {(imagePreview || formData.image) && (
+                <div className="mb-[30px] w-full flex justify-center">
+                  <img src={imagePreview || formData.image} alt={formData.title || "Preview"} className="w-[90%] h-[400px] object-cover rounded-[8px] border border-[#ddd]" />
+                </div>
               )}
+            </header>
+
+            {/* Article content */}
+            <article
+              className="text-[1.1rem] leading-[1.8] text-[#333] mb-[50px]"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(formData.content || "<p>Your blog content will appear here...</p>"),
+              }}
+            />
+
+            {/* Action buttons in preview */}
+            <div className="flex items-center justify-between mt-8">
+              <button onClick={() => setIsPreviewMode(false)} className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer">
+                ← BACK TO EDIT
+              </button>
+              <button onClick={handleBlogSubmit} className="rounded-full py-5 px-15 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer">
+                PUBLISH NOW
+              </button>
             </div>
-
-            <small style={{ color: "#666", display: "block", marginTop: "5px" }}>Upload an image file (JPEG, PNG, GIF, WebP) - Max 3MB. Images will be automatically optimized and securely stored.</small>
           </div>
-
-          <div style={{ marginBottom: "20px" }}>
-            <div
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                minHeight: "500px",
-
-                overflow: "auto",
-              }}
-            >
-              <SimpleEditor content={formData.content} onChange={handleEditorChange} placeholder="Write your blog post content here..." />
-            </div>
-            <small style={{ color: "#666", display: "block", marginTop: "5px" }}>Minimum 100 characters recommended for a quality post.</small>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => router.push("/blog")}
-              style={{
-                fontSize: "16px",
-                cursor: "pointer",
-                transition: "all 0.3s",
-              }}
-              className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground"
-            >
-              PREVIEW
-            </button>
-            <button
-              type="submit"
-              disabled={uploadingImage}
-              style={{
-                //backgroundColor: uploadingImage ? "#ccc" : "#007bff",
-                color: "white",
-                fontSize: "16px",
-                cursor: uploadingImage ? "not-allowed" : "pointer",
-                transition: "background-color 0.3s",
-              }}
-              className="rounded-full py-5 px-15 font-bold bg-primary-foreground"
-            >
-              PUBLISH NOW
-            </button>
-          </div>
-        </form>
-      </div>
+        </>
+      )}
 
       {/* Author Information Modal */}
       <Dialog open={showAuthorModal} onOpenChange={setShowAuthorModal}>
@@ -542,126 +489,37 @@ export default function SubmitBlogPost() {
             <DialogTitle className="text-center text-xl font-bold mb-4">Author Information</DialogTitle>
           </DialogHeader>
 
-          {error && (
-            <div
-              style={{
-                backgroundColor: "#f8d7da",
-                color: "#721c24",
-                padding: "15px",
-                borderRadius: "5px",
-                marginBottom: "20px",
-                border: "1px solid #f5c6cb",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-5 border border-red-200">{error}</div>}
 
           <form onSubmit={handleAuthorSubmit} className="space-y-4">
             <div>
-              <label htmlFor="authorName" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+              <label htmlFor="authorName" className="block mb-1 font-bold">
                 Your Name *
               </label>
-              <input
-                type="text"
-                id="authorName"
-                name="authorName"
-                value={formData.authorName}
-                onChange={handleInputChange}
-                placeholder="Enter your full name"
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  boxSizing: "border-box",
-                }}
-              />
+              <input type="text" id="authorName" name="authorName" value={formData.authorName} onChange={handleInputChange} placeholder="Enter your full name" required className="w-full p-3 border border-gray-300 rounded text-base box-border" />
             </div>
 
             <div>
-              <label htmlFor="authorPhone" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+              <label htmlFor="authorPhone" className="block mb-1 font-bold">
                 Your Phone Number (Optional)
               </label>
-              <input
-                type="tel"
-                id="authorPhone"
-                name="authorPhone"
-                value={formData.authorPhone}
-                onChange={handleInputChange}
-                placeholder="Enter your phone number"
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  boxSizing: "border-box",
-                }}
-              />
+              <input type="tel" id="authorPhone" name="authorPhone" value={formData.authorPhone} onChange={handleInputChange} placeholder="Enter your phone number" className="w-full p-3 border border-gray-300 rounded text-base box-border" />
             </div>
 
             <div>
-              <label htmlFor="authorEmail" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+              <label htmlFor="authorEmail" className="block mb-1 font-bold">
                 Your Email *
               </label>
-              <input
-                type="email"
-                id="authorEmail"
-                name="authorEmail"
-                value={formData.authorEmail}
-                onChange={handleInputChange}
-                placeholder="Enter your email address"
-                required
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  boxSizing: "border-box",
-                }}
-              />
-              <small style={{ color: "#666", display: "block", marginTop: "5px" }}>A verification code will be sent to this email</small>
+              <input type="email" id="authorEmail" name="authorEmail" value={formData.authorEmail} onChange={handleInputChange} placeholder="Enter your email address" required className="w-full p-3 border border-gray-300 rounded text-base box-border" />
+              <small className="text-gray-500 block mt-1">A verification code will be sent to this email</small>
             </div>
 
-            <div style={{ display: "flex", gap: "10px", paddingTop: "10px" }}>
-              <button
-                type="submit"
-                disabled={loading || uploadingImage}
-                style={{
-                  backgroundColor: loading || uploadingImage ? "#ccc" : "",
-                  color: "white",
-                  padding: "12px 20px",
-                  border: "none",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  cursor: loading || uploadingImage ? "not-allowed" : "pointer",
-                  transition: "background-color 0.3s",
-                  flex: 1,
-                }}
-                className="bg-primary"
-              >
+            <div className="flex gap-2.5 pt-2.5">
+              <button type="submit" disabled={loading || uploadingImage} className="bg-primary text-white py-3 px-5 border-none rounded text-base font-bold cursor-pointer transition-colors duration-300 flex-1 disabled:cursor-not-allowed disabled:bg-gray-300">
                 {uploadingImage ? "Uploading..." : loading ? "Sending..." : "Submit Post"}
               </button>
 
-              <button
-                type="button"
-                onClick={() => setShowAuthorModal(false)}
-                style={{
-                  backgroundColor: "transparent",
-                  color: "#6c757d",
-                  padding: "12px 20px",
-                  border: "1px solid #6c757d",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  flex: 1,
-                }}
-              >
+              <button type="button" onClick={() => setShowAuthorModal(false)} className="bg-transparent text-gray-500 py-3 px-5 border border-gray-500 rounded text-base cursor-pointer flex-1">
                 Cancel
               </button>
             </div>
@@ -679,99 +537,25 @@ export default function SubmitBlogPost() {
             </p>
           </DialogHeader>
 
-          {message && (
-            <div
-              style={{
-                backgroundColor: "#d4edda",
-                color: "#155724",
-                padding: "15px",
-                borderRadius: "5px",
-                marginBottom: "20px",
-                border: "1px solid #c3e6cb",
-              }}
-            >
-              {message}
-            </div>
-          )}
+          {message && <div className="bg-green-100 text-green-800 p-4 rounded mb-5 border border-green-200">{message}</div>}
 
-          {error && (
-            <div
-              style={{
-                backgroundColor: "#f8d7da",
-                color: "#721c24",
-                padding: "15px",
-                borderRadius: "5px",
-                marginBottom: "20px",
-                border: "1px solid #f5c6cb",
-              }}
-            >
-              {error}
-            </div>
-          )}
+          {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-5 border border-red-200">{error}</div>}
 
           <form onSubmit={handleVerifyCode} className="space-y-4">
             <div>
-              <label htmlFor="verificationCode" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
+              <label htmlFor="verificationCode" className="block mb-1 font-bold">
                 Enter Verification Code
               </label>
-              <input
-                type="text"
-                id="verificationCode"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").substring(0, 6))}
-                placeholder="000000"
-                maxLength={6}
-                required
-                style={{
-                  width: "100%",
-                  padding: "15px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "24px",
-                  textAlign: "center",
-                  letterSpacing: "8px",
-                  boxSizing: "border-box",
-                }}
-              />
-              <small style={{ color: "#666", display: "block", marginTop: "5px" }}>The code expires in 10 minutes</small>
+              <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").substring(0, 6))} placeholder="000000" maxLength={6} required className="w-full p-4 border border-gray-300 rounded text-2xl text-center tracking-[8px] box-border" />
+              <small className="text-gray-500 block mt-1">The code expires in 10 minutes</small>
             </div>
 
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <button
-                type="submit"
-                disabled={verifyingCode || verificationCode.length !== 6}
-                style={{
-                  backgroundColor: verifyingCode || verificationCode.length !== 6 ? "#ccc" : "",
-                  color: "white",
-                  padding: "12px 20px",
-                  border: "none",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                  cursor: verifyingCode || verificationCode.length !== 6 ? "not-allowed" : "pointer",
-                  transition: "background-color 0.3s",
-                  flex: 1,
-                }}
-                className="bg-primary"
-              >
+            <div className="flex gap-2.5 items-center">
+              <button type="submit" disabled={verifyingCode || verificationCode.length !== 6} className="bg-primary text-white py-3 px-5 border-none rounded text-base font-bold cursor-pointer transition-colors duration-300 flex-1 disabled:cursor-not-allowed disabled:bg-gray-300">
                 {verifyingCode ? "Verifying..." : "Verify & Submit"}
               </button>
 
-              <button
-                type="button"
-                onClick={handleResendCode}
-                disabled={resendingCode}
-                style={{
-                  backgroundColor: "transparent",
-                  padding: "12px 20px",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                  cursor: resendingCode ? "not-allowed" : "pointer",
-                  transition: "all 0.3s",
-                  flex: 1,
-                }}
-                className="border-1 border-primary text-primary"
-              >
+              <button type="button" onClick={handleResendCode} disabled={resendingCode} className="bg-transparent py-3 px-5 rounded text-base cursor-pointer flex-1 border border-primary text-primary transition-all duration-300 disabled:cursor-not-allowed">
                 {resendingCode ? "Resending..." : "Resend"}
               </button>
             </div>
@@ -785,16 +569,7 @@ export default function SubmitBlogPost() {
                 setError("");
                 setMessage("");
               }}
-              style={{
-                backgroundColor: "transparent",
-                color: "#6c757d",
-                padding: "8px 16px",
-                border: "1px solid #6c757d",
-                borderRadius: "4px",
-                fontSize: "14px",
-                cursor: "pointer",
-                width: "100%",
-              }}
+              className="bg-transparent text-gray-500 py-2 px-4 border border-gray-500 rounded text-sm cursor-pointer w-full"
             >
               ← Back to Author Info
             </button>
