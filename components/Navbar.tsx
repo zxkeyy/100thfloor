@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
-import { Settings } from "lucide-react";
+import { Globe } from "lucide-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import logoIcon from "@/public/100thlogo.png";
 import logoText from "@/public/100thlogotext.png";
 
@@ -22,7 +23,11 @@ type Variant = keyof typeof PAGE_VARIANTS;
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("Navbar");
 
   // Determine variant based on current pathname
   const getVariant = (): Variant => {
@@ -140,7 +145,7 @@ export function Navbar() {
   const scrollToSection = (sectionId: string) => {
     // If we're not on the home page, navigate to home first
     if (pathname !== "/") {
-      window.location.href = `/#${sectionId}`;
+      router.push(`/#${sectionId}`);
       return;
     }
 
@@ -152,7 +157,12 @@ export function Navbar() {
   };
 
   const handleBlogClick = () => {
-    window.location.href = "/blog";
+    router.push("/blog");
+  };
+
+  const handleLanguageSwitch = (newLocale: string) => {
+    router.push(pathname, { locale: newLocale });
+    setShowLanguageMenu(false);
   };
 
   return (
@@ -174,7 +184,7 @@ export function Navbar() {
             }}
             className={`transition-colors ${activeSection === "home" ? `${colors.active} font-bold underline underline-offset-6 decoration-2` : `${colors.secondary} ${colors.hover}`}`}
           >
-            Home
+            {t("home")}
           </a>
           <a
             href="#"
@@ -184,7 +194,7 @@ export function Navbar() {
             }}
             className={`transition-colors ${activeSection === "about" ? `${colors.active} font-bold underline underline-offset-6 decoration-2` : `${colors.secondary} ${colors.hover}`}`}
           >
-            About
+            {t("about")}
           </a>
           <a
             href="#"
@@ -194,7 +204,7 @@ export function Navbar() {
             }}
             className={`transition-colors ${activeSection === "services" ? `${colors.active} font-bold underline underline-offset-6 decoration-2` : `${colors.secondary} ${colors.hover}`}`}
           >
-            Services
+            {t("services")}
           </a>
           <a
             href="#"
@@ -204,7 +214,7 @@ export function Navbar() {
             }}
             className={`transition-colors ${activeSection === "portfolio" ? `${colors.active} font-bold underline underline-offset-6 decoration-2` : `${colors.secondary} ${colors.hover}`}`}
           >
-            Portfolio
+            {t("portfolio")}
           </a>
           <a
             href="#"
@@ -214,14 +224,29 @@ export function Navbar() {
             }}
             className={`transition-colors ${activeSection === "blog" ? `${colors.active} font-bold underline underline-offset-6 decoration-2` : `${colors.secondary} ${colors.hover}`}`}
           >
-            Blog
+            {t("blog")}
           </a>
         </nav>
 
         {/* Right side */}
         <div className="flex items-center space-x-4">
-          <span className={`font-medium ${colors.secondary}`}>En</span>
-          <Settings className={`w-5 h-5 cursor-pointer transition-colors ${colors.settings}`} />
+          <div className="relative">
+            <button onClick={() => setShowLanguageMenu(!showLanguageMenu)} className={`flex items-center gap-2 font-medium transition-colors ${colors.secondary} ${colors.hover}`}>
+              <Globe className="w-4 h-4" />
+              {t("language")}
+            </button>
+
+            {showLanguageMenu && (
+              <div className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <button onClick={() => handleLanguageSwitch("en")} className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${locale === "en" ? "bg-gray-50 font-medium" : ""}`}>
+                  English
+                </button>
+                <button onClick={() => handleLanguageSwitch("ar")} className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${locale === "ar" ? "bg-gray-50 font-medium" : ""}`}>
+                  العربية
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
