@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import fallbackImage from "@/public/fallback-image.png";
 import { Plus } from "lucide-react";
@@ -27,11 +27,7 @@ export default function BlogPage() {
   const t = useTranslations("Blog");
   const locale = useLocale();
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const response = await fetch("/api/posts");
       if (response.ok) {
@@ -46,7 +42,11 @@ export default function BlogPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const loadMorePosts = () => {
     setDisplayedPosts((prev) => prev + 6);
