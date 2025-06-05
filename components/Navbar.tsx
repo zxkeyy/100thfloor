@@ -9,7 +9,7 @@ import logoText from "@/public/100thlogotext.png";
 // Define page variants - add more pages as needed
 const PAGE_VARIANTS = {
   // Light variant (dark text) for pages with white/light backgrounds
-  light: ["/blog", "/blog/submit"],
+  light: ["/blog", "/blog/submit", "/admin/login", "/admin/dashboard"],
   // Dark variant (white text) for pages with dark backgrounds
   dark: [
     "/", // home page

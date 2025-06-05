@@ -8,7 +8,7 @@ import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import "../../../styles/_variables.scss";
 import "../../../styles/_keyframe-animations.scss";
-import { Image } from "lucide-react";
+import { CircleCheck, Image } from "lucide-react";
 import DOMPurify from "dompurify";
 
 // Import validation constants from the service
@@ -38,6 +38,7 @@ export default function SubmitBlogPost() {
   // Modal states
   const [showAuthorModal, setShowAuthorModal] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [verificationEmail, setVerificationEmail] = useState("");
   const [verifyingCode, setVerifyingCode] = useState(false);
@@ -248,25 +249,20 @@ export default function SubmitBlogPost() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setMessage(data.message);
-
-        // Reset form and redirect after success
-        setTimeout(() => {
-          setFormData({
-            title: "",
-            content: "",
-            authorName: "",
-            authorEmail: "",
-            authorPhone: "",
-            image: "",
-          });
-          setImageFile(null);
-          setImagePreview("");
-          setShowVerificationModal(false);
-          setVerificationCode("");
-          router.push("/blog");
-        }, 3000);
+        // Reset form and show thank you modal
+        setFormData({
+          title: "",
+          content: "",
+          authorName: "",
+          authorEmail: "",
+          authorPhone: "",
+          image: "",
+        });
+        setImageFile(null);
+        setImagePreview("");
+        setShowVerificationModal(false);
+        setVerificationCode("");
+        setShowThankYouModal(true);
       } else {
         const errorData = await response.json();
         setError(errorData.error || "Failed to verify code");
@@ -327,7 +323,7 @@ export default function SubmitBlogPost() {
     <>
       {!isPreviewMode ? (
         // Edit Mode
-        <div className="max-w-[1200px] mx-auto my-[50px] p-5">
+        <div className="max-w-[1200px] mx-auto my-[50px] p-5 mt-25">
           {message && <div className="bg-green-100 text-green-800 p-4 rounded mb-5 border border-green-200">{message}</div>}
 
           {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-5 border border-red-200">{error}</div>}
@@ -574,6 +570,54 @@ export default function SubmitBlogPost() {
               ← Back to Author Info
             </button>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Thank You Modal - Displayed after successful post submission */}
+      <Dialog open={showThankYouModal} onOpenChange={setShowThankYouModal}>
+        <DialogContent className="max-w-md bg-white p-10 rounded-lg shadow-lg">
+          <DialogHeader>
+            <DialogTitle className="items-center flex justify-center text-xl font-bold mb-4">
+              <CircleCheck className="stroke-primary" size={40} />
+              Thank You!
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="text-center mb-4">
+            <p className="text-gray-700 text-base">Your blog post has been successfully submitted and is now under review. You will be notified via email once it is published.</p>
+          </div>
+
+          <div className="flex gap-2.5">
+            <button
+              onClick={() => {
+                setShowThankYouModal(false);
+                router.push("/blog");
+              }}
+              className="bg-primary text-white py-3 px-5 border-none rounded text-base font-bold cursor-pointer transition-colors duration-300 flex-1"
+            >
+              Go to Blog
+            </button>
+
+            <button
+              onClick={() => {
+                setShowThankYouModal(false);
+                setFormData({
+                  title: "",
+                  content: "",
+                  authorName: "",
+                  authorEmail: "",
+                  authorPhone: "",
+                  image: "",
+                });
+                setImageFile(null);
+                setImagePreview("");
+                setIsPreviewMode(false);
+              }}
+              className="bg-transparent text-gray-500 py-3 px-5 border border-gray-500 rounded text-base cursor-pointer flex-1"
+            >
+              Write Another
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
     </>
