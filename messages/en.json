@@ -129,6 +129,8 @@
     "goToBlog": "Go to Blog",
     "writeAnother": "Write Another",
     "newVerificationSent": "New verification code sent to your email!",
+    "by": "By",
+    "minRead": "min read",
     "validationErrors": {
       "titleRequired": "Title is required",
       "contentRequired": "Content is required",

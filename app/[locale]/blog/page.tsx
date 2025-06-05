@@ -278,12 +278,12 @@ export default function BlogPage() {
           )}
 
           {posts.length > 13 && (
-            <div className="max-w-7xl flex flex-col items-center mx-auto mt-18">
+            <div className="max-w-7xl flex flex-col items-center mx-auto mb-18 mt-18">
               <div className="grid grid-cols-2 gap-18">
                 {posts.slice(13, displayedPosts).map((post) => (
                   <div key={post.id} className="w-full">
                     <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800 flex h-full w-full">
-                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-4/5 h-full object-cover rounded mb-2.5" />
+                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-[270px] h-full object-cover rounded mb-2.5" />
                       <div className="py-2 pl-2 w-full overflow-hidden text-ellipsis">
                         <h3 className="text-xl text-black leading-8 font-semibold mb-2.5 w-full overflow-hidden text-ellipsis">{post.title}</h3>
                         <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm mb-8">

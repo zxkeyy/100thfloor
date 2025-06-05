@@ -129,6 +129,8 @@
     "goToBlog": "اذهب إلى المدونة",
     "writeAnother": "اكتب مقالاً آخر",
     "newVerificationSent": "تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني!",
+    "by": "بواسطة",
+    "minRead": "دقيقة",
     "validationErrors": {
       "titleRequired": "العنوان مطلوب",
       "contentRequired": "المحتوى مطلوب",
