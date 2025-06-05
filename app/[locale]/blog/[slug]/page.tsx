@@ -59,8 +59,8 @@ export default function BlogPostPage() {
   }, [params.slug]);
 
   const fetchPost = async (slug: string) => {
-    setLoading(true); // Reset loading state on retry
-    setError(""); // Reset error state on retry
+    setLoading(true);
+    setError("");
     try {
       const response = await fetch(`/api/posts/${slug}`);
       if (response.ok) {
@@ -103,8 +103,8 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center mt-25">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <div className="animate-spin rounded-full h-16 w-16 md:h-32 md:w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -113,15 +113,15 @@ export default function BlogPostPage() {
     return (
       <>
         {/* NavBar Spacer */}
-        <div className="w-full h-25" />
-        <div className="max-w-[800px] mx-auto my-[50px] p-[20px] text-center">
-          <h1>{bt("error")}</h1>
-          <p className="text-red-500 mb-[20px]">{error}</p>
-          <div className="flex gap-[15px] justify-center">
-            <button onClick={() => fetchPost(params.slug as string)} className="bg-[#007bff] text-white py-[10px] px-[20px] border-none rounded-[4px] cursor-pointer">
+        <div className="w-full h-20" />
+        <div className="max-w-4xl mx-auto my-8 md:my-12 p-4 md:p-5 text-center">
+          <h1 className="text-xl md:text-2xl mb-4">{bt("error")}</h1>
+          <p className="text-red-500 mb-6 text-sm md:text-base">{error}</p>
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
+            <button onClick={() => fetchPost(params.slug as string)} className="bg-blue-600 text-white py-2.5 px-5 border-none rounded cursor-pointer text-sm md:text-base hover:bg-blue-700 transition-colors">
               {bt("tryAgain")}
             </button>
-            <Link href="/blog" className="bg-[#6c757d] text-white py-[10px] px-[20px] no-underline rounded-[4px]">
+            <Link href="/blog" className="bg-gray-600 text-white py-2.5 px-5 no-underline rounded text-sm md:text-base hover:bg-gray-700 transition-colors inline-block">
               {t("backToBlog")}
             </Link>
           </div>
@@ -135,26 +135,25 @@ export default function BlogPostPage() {
   }
 
   const { post, relatedPosts } = data;
-  console.log("Post data:", post);
-  console.log("Related posts:", relatedPosts);
 
   return (
     <>
       {/* NavBar Spacer */}
-      <div className="w-full h-25" />
-      <div className="max-w-[1100px] mx-auto my-[50px] p-[20px]">
+      <div className="w-full h-20" />
+
+      <div className="max-w-[1200px] mx-auto my-8 md:my-12 px-4 md:px-6 lg:px-8">
         {/* Back to blog link */}
-        <div className="mb-[30px]">
-          <Link href="/blog" className="text-primary no-underline text-[0.9rem] hover:underline">
+        <div className="mb-6 md:mb-8">
+          <Link href="/blog" className="text-primary no-underline text-sm md:text-base hover:underline transition-colors">
             {t("backToBlog")}
           </Link>
         </div>
 
         {/* Article header */}
-        <header className="mb-[40px]">
-          <h1 className="text-[2.5rem] leading-[1.2] mt-0 mr-0 mb-[20px] ml-0 text-[#333] text-center font-bold">{post.title}</h1>
+        <header className="mb-8 md:mb-12">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-tight mb-6 md:mb-8 text-gray-900 text-center font-bold">{post.title}</h1>
 
-          <div className="flex items-center justify-end gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+          <div dir={locale === "ar" ? "rtl" : "ltr"} className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 text-gray-600 text-sm md:text-base mb-6 md:mb-8">
             <span>
               {t("by")}
               <span className="font-bold"> {post.authorName}</span>
@@ -166,94 +165,102 @@ export default function BlogPostPage() {
           </div>
 
           {post.image && (
-            <div className="mb-[30px] w-full flex justify-center">
-              <img src={post.image} alt={post.title} className="w-[90%] h-[400px] object-cover rounded-[8px] border border-[#ddd]" />
+            <div className="mb-6 md:mb-8 w-full">
+              <div className="w-full aspect-[2] max-w-4xl mx-auto">
+                <img src={post.image || "/placeholder.svg"} alt={post.title} className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm" />
+              </div>
             </div>
           )}
         </header>
 
         {/* Article content */}
-        <article className="text-[1.1rem] leading-[1.8] text-[#333] mb-[50px]" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }} />
+        <article
+          className="prose prose-sm md:prose-base lg:prose-lg max-w-none mb-12 md:mb-16"
+          style={{
+            fontSize: "1rem",
+            lineHeight: "1.7",
+            color: "#333",
+          }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+        />
 
         {/* Comments section */}
-        <div className="mx-auto bg-black/1 p-12 rounded-lg border border-gray-100 border-2">
+        <div className="bg-gray-50 p-4 md:p-6 lg:p-8 rounded-lg border border-gray-200">
           {/* Comments List */}
-          <div className="space-y-6 mb-6">
+          <div className="space-y-4 md:space-y-6 mb-6 md:mb-8">
             {comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3">
+              <div key={comment.id} className="flex gap-3 md:gap-4">
                 {/* Avatar */}
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-slate-600 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-slate-600 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                     </svg>
                   </div>
                 </div>
 
                 {/* Comment Content */}
-                <div className="flex-1">
-                  <p className="text-gray-700 text-sm leading-relaxed mb-2">{comment.text}</p>
-                  <p className="text-gray-400 text-xs">{comment.timeAgo}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-2">{comment.text}</p>
+                  <p className="text-gray-400 text-xs md:text-sm">{comment.timeAgo}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Comment Input Section */}
-          <div className="mt-4">
-            <div className="flex gap-3">
-              {/* Input Area */}
-              <div className="flex-1 min-w-0 ">
-                <div className="border border-gray-200 rounded-lg shadow-xl bg-white overflow-hidden">
-                  <div className="flex px-3">
-                    <div
-                      contentEditable
-                      className="flex-1 min-w-0 p-3 outline-none text-sm text-gray-700 min-h-20 resize-none"
-                      style={{
-                        wordWrap: "break-word",
-                        overflowWrap: "break-word",
-                        whiteSpace: "pre-wrap",
-                        maxWidth: "100%",
-                        overflow: "hidden",
-                        textOverflow: "clip",
-                        wordBreak: "break-word",
-                      }}
-                      suppressContentEditableWarning={true}
-                      data-placeholder={t("writeComment")}
-                    />
-                    {/* Comment Button */}
-                    <div className="flex items-center p-2">
-                      <button className="px-4 py-3 bg-gray-400 text-white text-sm rounded-lg hover:bg-gray-500 transition-colors whitespace-nowrap">{t("comment")}</button>
-                    </div>
-                  </div>
+          <div className="border-t border-gray-200 pt-6">
+            <div className="border border-gray-300 rounded-lg bg-white overflow-hidden shadow-sm">
+              <div className="flex flex-col md:flex-row">
+                <div
+                  contentEditable
+                  className="flex-1 p-3 md:p-4 outline-none text-sm md:text-base text-gray-700 min-h-20 md:min-h-24 resize-none"
+                  style={{
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    whiteSpace: "pre-wrap",
+                    maxWidth: "100%",
+                    overflow: "hidden",
+                    textOverflow: "clip",
+                    wordBreak: "break-word",
+                  }}
+                  suppressContentEditableWarning={true}
+                  data-placeholder={t("writeComment")}
+                />
+                {/* Comment Button */}
+                <div className="flex items-center justify-end p-3 md:p-4 border-t md:border-t-0 md:border-l border-gray-200">
+                  <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-primary text-white text-sm md:text-base rounded-md hover:bg-primary/90 transition-colors">{t("comment")}</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       {/* You May Like This Section */}
-      <div className="mt-[50px] p-10 flex justify-center">
-        <div className="w-full bg-gray-100 py-10 flex justify-center">
-          <div className="w-full max-w-[1400px]">
-            <h2 dir={locale == "ar" ? "rtl" : "ltr"} className="text-[1.8rem] font-bold mb-[20px]">
+      <div className="mt-12 md:mt-16 px-4 md:px-0 flex justify-center">
+        <div className="w-full bg-gray-100 py-8 md:py-12 lg:py-16 flex justify-center">
+          <div className="w-full max-w-7xl px-4 md:px-6 lg:px-8">
+            <h2 dir={locale === "ar" ? "rtl" : "ltr"} className="text-xl md:text-2xl lg:text-3xl font-bold mb-6 md:mb-8 text-gray-900">
               {t("youMayLike")}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px]">
-              {relatedPosts.map((post) => (
-                <div key={post.id}>
-                  <Link href={`/blog/${post.slug}`} className="no-underline text-[#333]">
-                    {post.image ? <img src={post.image} alt={post.title} className="w-full h-[250px] object-cover rounded-[4px] mb-[10px]" /> : <img src={fallbackImage.src} alt="Fallback" className="w-full h-[250px] object-cover rounded-[4px] mb-[10px]" />}
-                    <h3 className="text-[1.2rem] font-semibold mb-[10px]">{post.title}</h3>
-                    <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {relatedPosts.map((relatedPost) => (
+                <div key={relatedPost.id} className="group">
+                  <Link href={`/blog/${relatedPost.slug}`} className="no-underline text-gray-900 block">
+                    <div className="w-full aspect-[1.55] mb-3 md:mb-4">
+                      <img src={relatedPost.image || fallbackImage.src} alt={relatedPost.title} className="w-full h-full object-cover rounded-lg group-hover:shadow-md transition-shadow duration-200" />
+                    </div>
+                    <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 line-clamp-2 group-hover:text-primary transition-colors">{relatedPost.title}</h3>
+                    <div dir={locale === "ar" ? "rtl" : "ltr"} className="flex flex-wrap items-center gap-1.5 text-gray-600 text-xs md:text-sm">
                       <span>
                         {t("by")}
-                        <span className="font-bold"> {post.authorName}</span>
+                        <span className="font-bold"> {relatedPost.authorName}</span>
                       </span>
                       <span>•</span>
-                      <time>{formatDate(post.createdAt)}</time>
+                      <time>{formatDate(relatedPost.createdAt)}</time>
                       <span>•</span>
-                      <span>{getReadingTime(post.content)}</span>
+                      <span>{getReadingTime(relatedPost.content)}</span>
                     </div>
                   </Link>
                 </div>

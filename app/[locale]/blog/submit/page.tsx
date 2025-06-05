@@ -2,6 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
@@ -136,8 +138,8 @@ export default function SubmitBlogPost() {
 
     // Phone validation (only if provided)
     if (formData.authorPhone.trim()) {
-      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-      if (!phoneRegex.test(formData.authorPhone.replace(/[\s\-\(\)]/g, ""))) {
+      const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+      if (!phoneRegex.test(formData.authorPhone.replace(/[\s\-$$$$]/g, ""))) {
         return t("validationErrors.invalidPhone");
       }
     }
@@ -341,7 +343,7 @@ export default function SubmitBlogPost() {
     <>
       {!isPreviewMode ? (
         // Edit Mode
-        <div className="max-w-[1200px] mx-auto my-[50px] p-5 mt-25">
+        <div className="max-w-4xl mx-auto my-8 md:my-12 px-4 md:px-6 lg:px-8 pt-20">
           {message && <div className="bg-green-100 text-green-800 p-4 rounded mb-5 border border-green-200">{message}</div>}
 
           {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-5 border border-red-200">{error}</div>}
@@ -356,7 +358,7 @@ export default function SubmitBlogPost() {
                 onChange={handleInputChange}
                 placeholder={t("titlePlaceholder")}
                 required
-                className="text-[46px] text-center font-bold outline-none resize-none overflow-hidden w-full"
+                className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-center font-bold outline-none resize-none overflow-hidden w-full leading-tight"
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
                   target.style.height = "auto";
@@ -384,7 +386,7 @@ export default function SubmitBlogPost() {
               >
                 {imagePreview ? (
                   <>
-                    <img src={imagePreview} alt="Image preview" className="w-full h-full object-cover rounded-lg max-h-[400px]" />
+                    <img src={imagePreview || "/placeholder.svg"} alt="Image preview" className="w-full h-full object-cover rounded-lg max-h-[400px]" />
 
                     <button
                       type="button"
@@ -425,34 +427,35 @@ export default function SubmitBlogPost() {
               <small className="text-gray-500 block mt-1">{t("contentHelp")}</small>
             </div>
 
-            <div className="flex items-center justify-between">
-              <button type="button" onClick={() => setIsPreviewMode(true)} className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer">
+            <div className="flex flex-col sm:flex-row text-sm md:text-base items-center justify-between gap-4">
+              <button type="button" onClick={() => setIsPreviewMode(true)} className="w-full sm:w-auto rounded-full py-3 md:py-4 px-6 md:px-8 lg:px-12 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer hover:bg-primary-foreground hover:text-white">
                 {t("preview")}
               </button>
-              <button type="submit" disabled={uploadingImage} className="rounded-full py-5 px-15 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer disabled:cursor-not-allowed">
+              <button type="submit" disabled={uploadingImage} className="w-full sm:w-auto rounded-full py-3 md:py-4 px-6 md:px-8 lg:px-12 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer disabled:cursor-not-allowed hover:bg-primary-foreground/90">
                 {t("publishNow")}
               </button>
             </div>
           </form>
         </div>
       ) : (
-        // Preview Mode - Styled exactly like the real blog post page
+        // Preview Mode - Styled exactly like the responsive blog post page
         <>
           {/* NavBar Spacer */}
-          <div className="w-full h-25" />
-          <div className="max-w-[1100px] mx-auto my-[50px] p-[20px]">
+          <div className="w-full h-20" />
+
+          <div className="max-w-4xl mx-auto my-8 md:my-12 px-4 md:px-6 lg:px-8">
             {/* Back to edit button */}
-            <div className="mb-[30px]">
-              <button onClick={() => setIsPreviewMode(false)} className="text-primary no-underline text-[0.9rem] hover:underline bg-transparent border-none cursor-pointer">
+            <div className="mb-6 md:mb-8">
+              <button onClick={() => setIsPreviewMode(false)} className="text-primary no-underline text-sm md:text-base hover:underline bg-transparent border-none cursor-pointer transition-colors">
                 {t("backToEdit")}
               </button>
             </div>
 
             {/* Article header */}
-            <header className="mb-[40px]">
-              <h1 className="text-[2.5rem] leading-[1.2] mt-0 mr-0 mb-[20px] ml-0 text-[#333] text-center font-bold">{formData.title || t("yourBlogTitle")}</h1>
+            <header className="mb-8 md:mb-12">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-tight mb-6 md:mb-8 text-gray-900 text-center font-bold">{formData.title || t("yourBlogTitle")}</h1>
 
-              <div className="flex items-center justify-end gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
+              <div dir={locale === "ar" ? "rtl" : "ltr"} className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 text-gray-600 text-sm md:text-base mb-6 md:mb-8">
                 <span>
                   {t("by")}
                   <span className="font-bold"> {formData.authorName || t("yourName")}</span>
@@ -466,26 +469,33 @@ export default function SubmitBlogPost() {
               </div>
 
               {(imagePreview || formData.image) && (
-                <div className="mb-[30px] w-full flex justify-center">
-                  <img src={imagePreview || formData.image} alt={formData.title || "Preview"} className="w-[90%] h-[400px] object-cover rounded-[8px] border border-[#ddd]" />
+                <div className="mb-6 md:mb-8 w-full">
+                  <div className="w-full aspect-[2] max-w-4xl mx-auto">
+                    <img src={imagePreview || formData.image} alt={formData.title || "Preview"} className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm" />
+                  </div>
                 </div>
               )}
             </header>
 
             {/* Article content */}
             <article
-              className="text-[1.1rem] leading-[1.8] text-[#333] mb-[50px]"
+              className="prose prose-sm md:prose-base lg:prose-lg max-w-none mb-12 md:mb-16"
+              style={{
+                fontSize: "1rem",
+                lineHeight: "1.7",
+                color: "#333",
+              }}
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(formData.content || `<p>${t("yourContentPreview")}</p>`),
               }}
             />
 
             {/* Action buttons in preview */}
-            <div className="flex items-center justify-between mt-8">
-              <button onClick={() => setIsPreviewMode(false)} className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 md:mt-12">
+              <button onClick={() => setIsPreviewMode(false)} className="w-full sm:w-auto rounded-full py-3 md:py-4 px-6 md:px-8 lg:px-12 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer hover:bg-primary-foreground hover:text-white text-sm md:text-base">
                 {t("backToEditFull")}
               </button>
-              <button onClick={handleBlogSubmit} className="rounded-full py-5 px-15 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer">
+              <button onClick={handleBlogSubmit} className="w-full sm:w-auto rounded-full py-3 md:py-4 px-6 md:px-8 lg:px-12 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer hover:bg-primary-foreground/90 text-sm md:text-base">
                 {t("publishNow")}
               </button>
             </div>
