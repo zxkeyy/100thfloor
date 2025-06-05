@@ -77,8 +77,8 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="max-w-[800px] mx-auto my-[50px] p-[20px] text-center">
-        <h1>Loading...</h1>
+      <div className="min-h-screen flex items-center justify-center mt-25">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
