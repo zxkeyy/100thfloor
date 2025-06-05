@@ -7,11 +7,13 @@ import house2 from "@/public/house2.png";
 import house3 from "@/public/house3.png";
 import { useState } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 function About() {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("About");
+  const locale = useLocale();
+  const isArabic = locale === "ar";
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -22,20 +24,20 @@ function About() {
           <div style={{ backgroundColor: "" }} className="w-[32%] flex flex-col justify-center gap-4">
             <div className="flex justify-end items-end h-[45%]">
               {/* Left vertical text */}
-              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-primary text-sm font-bold tracking-[0.6em]">
+              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-primary text-sm font-bold ${isArabic ? "" : "tracking-[0.6em]"}`}>
                 {t("properties.opulentHaven")}
               </span>
-              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
+              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-gray-500 text-sm ${isArabic ? "" : "tracking-[0.1em]"}`}>
                 {t("properties.opulentHavenAddress")}
               </span>
               <Image src={house2} alt="House 2" className="h-full w-auto ml-[5%]" />
             </div>
             <div className="flex justify-end items-end h-[45%]">
               {/* Left vertical text */}
-              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-primary text-sm font-bold tracking-[0.6em]">
+              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-primary text-sm font-bold ${isArabic ? "" : "tracking-[0.6em]"}`}>
                 {t("properties.grandOak")}
               </span>
-              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
+              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-gray-500 text-sm ${isArabic ? "" : "tracking-[0.1em]"}`}>
                 {t("properties.grandOakAddress")}
               </span>
               <Image src={house3} alt="House 3" className="h-full w-auto ml-[5%]" />
@@ -96,10 +98,10 @@ function About() {
                 </Dialog>
               </div>
               {/* right vertical text */}
-              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-primary text-sm font-bold tracking-[0.6em]">
+              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-primary text-sm font-bold ${isArabic ? "" : "tracking-[0.6em]"}`}>
                 {t("properties.serenityManor")}
               </span>
-              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
+              <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-gray-500 text-sm ${isArabic ? "" : "tracking-[0.1em]"}`}>
                 {t("properties.serenityManorAddress")}
               </span>
             </div>

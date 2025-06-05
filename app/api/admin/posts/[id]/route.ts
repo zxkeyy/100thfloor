@@ -6,10 +6,7 @@ import { authOptions } from "@/lib/auth";
 const prisma = new PrismaClient();
 
 // PATCH /api/admin/posts/[id] - Update post status
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -32,10 +29,7 @@ export async function PATCH(
 }
 
 // DELETE /api/admin/posts/[id] - Delete a post
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {

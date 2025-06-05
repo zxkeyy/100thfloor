@@ -3,10 +3,12 @@ import logoIcon from "@/public/100thlogo.png";
 import { ArrowRight } from "lucide-react";
 import ImageCarousel from "@/components/Carousel";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 function Services() {
   const t = useTranslations("Services");
+  const locale = useLocale();
+  const isArabic = locale === "ar";
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -16,7 +18,7 @@ function Services() {
       <div className="max-w-[1400px] w-full">
         <div className="flex items-center">
           <div className="w-[50%] flex flex-col justify-center ">
-            <div className="flex items-center space-x-3 text-gray-500 tracking-widest text-3xl mb-5">
+            <div className={`flex items-center space-x-3 text-gray-500 ${isArabic ? "" : "tracking-widest"} text-3xl mb-5`}>
               <Image src={logoIcon} alt="100th Floor" style={{ color: "#176B87" }} className="h-8 w-auto" width={32} height={32} />
               <span>{t("sectionTitle")}</span>
             </div>

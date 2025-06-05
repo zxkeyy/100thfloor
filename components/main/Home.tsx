@@ -1,13 +1,16 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import modernHouse from "@/public/modern-house.png";
 import fadedLogoBg from "@/public/fadedlogobg.png";
 import logoIcon from "@/public/100thlogo.png";
-import { useTranslations } from "next-intl";
 
 function Home() {
   const t = useTranslations("Home");
+  const locale = useLocale();
+  const isArabic = locale === "ar";
 
   return (
     <div className="min-h-screen items-center relative overflow-x-hidden text-white flex flex-col">
@@ -49,7 +52,7 @@ function Home() {
         <div className="container mx-auto ">
           <div className="max-w-2xl">
             {/* Welcome Text */}
-            <div className="flex items-center space-x-3 text-white/70 font-medium tracking-widest text-3xl">
+            <div className={`flex items-center space-x-3 text-white/70 font-medium ${isArabic ? 'text-3xl' : 'tracking-widest text-3xl'}`}>
               <Image src={logoIcon} alt="100th Floor" className="h-8 w-auto" width={32} height={32} />
               <span>{t("welcome")}</span>
             </div>
