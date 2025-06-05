@@ -7,9 +7,11 @@ import house2 from "@/public/house2.png";
 import house3 from "@/public/house3.png";
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 function About() {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("About");
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -21,46 +23,43 @@ function About() {
             <div className="flex justify-end items-end h-[45%]">
               {/* Left vertical text */}
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-primary text-sm font-bold tracking-[0.6em]">
-                OPULENT HAVEN MANSION
+                {t("properties.opulentHaven")}
               </span>
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
-                9876, Boulevard Goldington, TX 12345 US
+                {t("properties.opulentHavenAddress")}
               </span>
               <Image src={house2} alt="House 2" className="h-full w-auto ml-[5%]" />
             </div>
             <div className="flex justify-end items-end h-[45%]">
               {/* Left vertical text */}
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-primary text-sm font-bold tracking-[0.6em]">
-                GRAND OAK ESTATE
+                {t("properties.grandOak")}
               </span>
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
-                5678 CY, Cedar Heights, NY 54321, US
+                {t("properties.grandOakAddress")}
               </span>
               <Image src={house3} alt="House 3" className="h-full w-auto ml-[5%]" />
             </div>
           </div>
           <div style={{ backgroundColor: "green" }} className="w-[28%]">
-            <div className="bg-slate-800 text-white p-10 mx-auto flex flex-col">
+            <div className="bg-slate-800 text-white p-10 mx-auto flex flex-col h-full">
               {/* Header */}
               <h1 className="text-5xl font-bold mb-8">
-                About <span className="text-primary">Us</span>
+                {t("title")} <span className="text-primary">{t("titleHighlight")}</span>
               </h1>
 
               {/* Content */}
               <div className="flex-1 space-y-6 text-gray-300 leading-relaxed text-sm">
-                <p>Welcome to 100 flour, where the future of architecture intertwines with sustainability to create transformative spaces. Founded with a vision to revolutionize the architectural landscape.</p>
-
-                <p>Our mission is simple: to design spaces that inspire, function, and endure. We strive to meet the needs of today without compromising the ability of future generations to meet their own needs. Our goal is to create buildings that not only stand the test of time but also contribute positively to their surroundings.</p>
-
-                <p>At Arockt, we are constantly exploring new horizons in architecture and sustainability. We invite you to join us as we continue to design not just buildings, but better futures. Whether you are a potential client, a future team member, or someone interested in sustainable architecture, connect with us and be a part of our journey to make the world a better place through thoughtful and innovative design.</p>
-
-                <p className="font-medium text-white">Together, let&apos;s build the future.</p>
+                <p>{t("description1")}</p>
+                <p>{t("description2")}</p>
+                <p>{t("description3")}</p>
+                <p className="font-medium text-white">{t("conclusion")}</p>
               </div>
 
               {/* CTA Button */}
               <div className="mt-8 pt-4">
                 <Button className="w-full h-12 text-lg bg-transparent border border-primary text-primary cursor-pointer hover:bg-primary hover:text-slate-800 py-3 px-6 rounded transition-all duration-300 flex items-center justify-center space-x-2 font-medium group transition-all duration-300">
-                  Contact Us
+                  {t("contactUs")}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
                 </Button>
               </div>
@@ -98,21 +97,21 @@ function About() {
               </div>
               {/* right vertical text */}
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-primary text-sm font-bold tracking-[0.6em]">
-                SERENETY MANOR
+                {t("properties.serenityManor")}
               </span>
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className="text-gray-500 text-sm tracking-[0.1em]">
-                1234 Tranquil Avenue Willowbrook, CA 98765, US
+                {t("properties.serenityManorAddress")}
               </span>
             </div>
             <div className="m-8">
               <div className="mb-4">
                 <h1 className="text-4xl font-bold leading-tight">
-                  Explore Our Modern
+                  {t("exploreTitle")}
                   <br />
-                  <span style={{ color: "#176B87" }}>Residential Architectures</span>
+                  <span style={{ color: "#176B87" }}>{t("exploreTitleHighlight")}</span>
                 </h1>
               </div>
-              <p className="text-gray-500 text-lg  leading-relaxed max-w-lg">That harmonize everyday living with elegance and Eco-friendliness. From spacious family homes to compact urban residences.</p>
+              <p className="text-gray-500 text-lg  leading-relaxed max-w-lg">{t("exploreDescription")}</p>
             </div>
           </div>
         </div>

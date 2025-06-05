@@ -6,10 +6,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import "../../../styles/_variables.scss";
-import "../../../styles/_keyframe-animations.scss";
+import "../../../../styles/_variables.scss";
+import "../../../../styles/_keyframe-animations.scss";
 import { CircleCheck, Image } from "lucide-react";
 import DOMPurify from "dompurify";
+import { useTranslations, useLocale } from "next-intl";
 
 // Import validation constants from the service
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
@@ -17,6 +18,8 @@ const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
 
 export default function SubmitBlogPost() {
   const router = useRouter();
+  const t = useTranslations("BlogSubmit");
+  const locale = useLocale();
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -66,12 +69,12 @@ export default function SubmitBlogPost() {
     if (file) {
       // Basic frontend validation (server will do comprehensive validation)
       if (!ALLOWED_TYPES.includes(file.type)) {
-        setError("Please select a valid image file (JPEG, PNG, GIF, or WebP)");
+        setError(t("validationErrors.invalidFileType"));
         return;
       }
 
       if (file.size > MAX_FILE_SIZE) {
-        setError("File too large. Please select an image under 3MB");
+        setError(t("validationErrors.fileTooLarge"));
         return;
       }
 
@@ -116,27 +119,26 @@ export default function SubmitBlogPost() {
   };
 
   const validateBlogForm = (): string | null => {
-    if (!formData.title.trim()) return "Title is required";
-    if (!formData.content.trim() || formData.content === "<p></p>") return "Content is required";
+    if (!formData.title.trim()) return t("validationErrors.titleRequired");
+    if (!formData.content.trim() || formData.content === "<p></p>") return t("validationErrors.contentRequired");
     return null;
   };
 
   const validateAuthorForm = (): string | null => {
-    if (!formData.authorName.trim()) return "Your name is required";
-    if (!formData.authorEmail.trim()) return "Your email is required";
-    // Phone number is now optional - removed validation
+    if (!formData.authorName.trim()) return t("validationErrors.nameRequired");
+    if (!formData.authorEmail.trim()) return t("validationErrors.emailRequired");
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.authorEmail)) {
-      return "Please enter a valid email address";
+      return t("validationErrors.invalidEmail");
     }
 
     // Phone validation (only if provided)
     if (formData.authorPhone.trim()) {
       const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
       if (!phoneRegex.test(formData.authorPhone.replace(/[\s\-\(\)]/g, ""))) {
-        return "Please enter a valid phone number";
+        return t("validationErrors.invalidPhone");
       }
     }
 
@@ -181,7 +183,7 @@ export default function SubmitBlogPost() {
       if (imageFile) {
         const uploadedImageUrl = await uploadImage();
         if (!uploadedImageUrl) {
-          setError("Failed to upload image. Please try again.");
+          setError(t("validationErrors.uploadFailed"));
           setLoading(false);
           return;
         }
@@ -207,23 +209,23 @@ export default function SubmitBlogPost() {
         setShowVerificationModal(true);
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to submit blog post");
+        setError(errorData.error || t("validationErrors.submissionFailed"));
       }
     } catch (error) {
       console.error("Error submitting post:", error);
       if (error instanceof Error) {
         // Handle specific errors from the service
         if (error.message.includes("Too many upload attempts")) {
-          setError("Too many upload attempts. Please try again in a few minutes.");
+          setError(t("validationErrors.tooManyUploads"));
         } else if (error.message.includes("Invalid file type")) {
-          setError("Invalid file type. Please select a valid image file.");
+          setError(t("validationErrors.invalidFileType"));
         } else if (error.message.includes("File too large")) {
-          setError("File too large. Please select an image under 3MB.");
+          setError(t("validationErrors.fileTooLarge"));
         } else {
-          setError("An error occurred while submitting your post. Please try again.");
+          setError(t("validationErrors.submissionFailed"));
         }
       } else {
-        setError("An error occurred while submitting your post. Please try again.");
+        setError(t("validationErrors.submissionFailed"));
       }
     } finally {
       setLoading(false);
@@ -275,6 +277,22 @@ export default function SubmitBlogPost() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (locale === "ar") {
+      return date.toLocaleDateString("ar-EG", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   const handleResendCode = async () => {
     setResendingCode(true);
     setError("");
@@ -305,14 +323,14 @@ export default function SubmitBlogPost() {
       if (response.ok) {
         const data = await response.json();
         console.log("log 10", data);
-        setMessage("New verification code sent to your email!");
+        setMessage(t("newVerificationSent"));
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to resend verification code");
+        setError(errorData.error || t("validationErrors.submissionFailed"));
       }
     } catch (error) {
       console.error("Error resending code:", error);
-      setError("An error occurred while resending the code. Please try again.");
+      setError(t("validationErrors.submissionFailed"));
     } finally {
       setResendingCode(false);
     }
@@ -336,7 +354,7 @@ export default function SubmitBlogPost() {
                 rows={1}
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder="Title..."
+                placeholder={t("titlePlaceholder")}
                 required
                 className="text-[46px] text-center font-bold outline-none resize-none overflow-hidden w-full"
                 onInput={(e) => {
@@ -382,37 +400,37 @@ export default function SubmitBlogPost() {
                         flex items-center justify-center transition-all duration-300
                         hover:bg-[rgba(220,53,69,1)]
                       "
-                      title="Remove image"
+                      title={t("removeImage")}
                     >
                       ×
                     </button>
 
-                    <div className="absolute bottom-[10px] left-1/2 transform -translate-x-1/2 bg-[rgba(0,0,0,0.7)] text-white py-1 px-2 rounded text-xs opacity-80">Click to change image</div>
+                    <div className="absolute bottom-[10px] left-1/2 transform -translate-x-1/2 bg-[rgba(0,0,0,0.7)] text-white py-1 px-2 rounded text-xs opacity-80">{t("clickToChangeImage")}</div>
                   </>
                 ) : (
                   <>
                     <Image size={50} />
-                    <p>Add showcase image</p>
+                    <p>{t("addShowcaseImage")}</p>
                   </>
                 )}
               </div>
 
-              <small className="text-gray-500 block mt-1">Upload an image file (JPEG, PNG, GIF, WebP) - Max 3MB. Images will be automatically optimized and securely stored.</small>
+              <small className="text-gray-500 block mt-1">{t("uploadImageHelp")}</small>
             </div>
 
             <div className="mb-5">
               <div className="border border-gray-300 rounded min-h-[500px] overflow-auto">
-                <SimpleEditor content={formData.content} onChange={handleEditorChange} placeholder="Write your blog post content here..." />
+                <SimpleEditor content={formData.content} onChange={handleEditorChange} placeholder={t("contentPlaceholder")} />
               </div>
-              <small className="text-gray-500 block mt-1">Minimum 100 characters recommended for a quality post.</small>
+              <small className="text-gray-500 block mt-1">{t("contentHelp")}</small>
             </div>
 
             <div className="flex items-center justify-between">
               <button type="button" onClick={() => setIsPreviewMode(true)} className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer">
-                PREVIEW
+                {t("preview")}
               </button>
               <button type="submit" disabled={uploadingImage} className="rounded-full py-5 px-15 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer disabled:cursor-not-allowed">
-                PUBLISH NOW
+                {t("publishNow")}
               </button>
             </div>
           </form>
@@ -426,28 +444,25 @@ export default function SubmitBlogPost() {
             {/* Back to edit button */}
             <div className="mb-[30px]">
               <button onClick={() => setIsPreviewMode(false)} className="text-primary no-underline text-[0.9rem] hover:underline bg-transparent border-none cursor-pointer">
-                ← Back to Edit
+                {t("backToEdit")}
               </button>
             </div>
 
             {/* Article header */}
             <header className="mb-[40px]">
-              <h1 className="text-[2.5rem] leading-[1.2] mt-0 mr-0 mb-[20px] ml-0 text-[#333] text-center font-bold">{formData.title || "Your Blog Title"}</h1>
+              <h1 className="text-[2.5rem] leading-[1.2] mt-0 mr-0 mb-[20px] ml-0 text-[#333] text-center font-bold">{formData.title || t("yourBlogTitle")}</h1>
 
               <div className="flex items-center justify-end gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
                 <span>
-                  By<span className="font-bold"> {formData.authorName || "Your Name"}</span>
+                  {t("by")}
+                  <span className="font-bold"> {formData.authorName || t("yourName")}</span>
                 </span>
                 <span>•</span>
-                <time>
-                  {new Date().toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
+                <time>{formatDate(new Date().toISOString())}</time>
                 <span>•</span>
-                <span>{Math.ceil((formData.content?.split(" ").length || 0) / 200) || 1} min read</span>
+                <span>
+                  {Math.ceil((formData.content?.split(" ").length || 0) / 200) || 1} {t("minRead")}
+                </span>
               </div>
 
               {(imagePreview || formData.image) && (
@@ -461,17 +476,17 @@ export default function SubmitBlogPost() {
             <article
               className="text-[1.1rem] leading-[1.8] text-[#333] mb-[50px]"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(formData.content || "<p>Your blog content will appear here...</p>"),
+                __html: DOMPurify.sanitize(formData.content || `<p>${t("yourContentPreview")}</p>`),
               }}
             />
 
             {/* Action buttons in preview */}
             <div className="flex items-center justify-between mt-8">
               <button onClick={() => setIsPreviewMode(false)} className="rounded-full py-5 px-15 font-bold text-primary-foreground border-2 border-primary-foreground transition-all duration-300 cursor-pointer">
-                ← BACK TO EDIT
+                {t("backToEditFull")}
               </button>
               <button onClick={handleBlogSubmit} className="rounded-full py-5 px-15 font-bold bg-primary-foreground text-white transition-colors duration-300 cursor-pointer">
-                PUBLISH NOW
+                {t("publishNow")}
               </button>
             </div>
           </div>
@@ -482,7 +497,7 @@ export default function SubmitBlogPost() {
       <Dialog open={showAuthorModal} onOpenChange={setShowAuthorModal}>
         <DialogContent className="max-w-md bg-white p-10 rounded-lg shadow-lg">
           <DialogHeader>
-            <DialogTitle className="text-center text-xl font-bold mb-4">Author Information</DialogTitle>
+            <DialogTitle className="text-center text-xl font-bold mb-4">{t("authorInformation")}</DialogTitle>
           </DialogHeader>
 
           {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-5 border border-red-200">{error}</div>}
@@ -490,33 +505,33 @@ export default function SubmitBlogPost() {
           <form onSubmit={handleAuthorSubmit} className="space-y-4">
             <div>
               <label htmlFor="authorName" className="block mb-1 font-bold">
-                Your Name *
+                {t("yourNameLabel")}
               </label>
-              <input type="text" id="authorName" name="authorName" value={formData.authorName} onChange={handleInputChange} placeholder="Enter your full name" required className="w-full p-3 border border-gray-300 rounded text-base box-border" />
+              <input type="text" id="authorName" name="authorName" value={formData.authorName} onChange={handleInputChange} placeholder={t("yourNamePlaceholder")} required className="w-full p-3 border border-gray-300 rounded text-base box-border" />
             </div>
 
             <div>
               <label htmlFor="authorPhone" className="block mb-1 font-bold">
-                Your Phone Number (Optional)
+                {t("yourPhoneLabel")}
               </label>
-              <input type="tel" id="authorPhone" name="authorPhone" value={formData.authorPhone} onChange={handleInputChange} placeholder="Enter your phone number" className="w-full p-3 border border-gray-300 rounded text-base box-border" />
+              <input type="tel" id="authorPhone" name="authorPhone" value={formData.authorPhone} onChange={handleInputChange} placeholder={t("yourPhonePlaceholder")} className="w-full p-3 border border-gray-300 rounded text-base box-border" />
             </div>
 
             <div>
               <label htmlFor="authorEmail" className="block mb-1 font-bold">
-                Your Email *
+                {t("yourEmailLabel")}
               </label>
-              <input type="email" id="authorEmail" name="authorEmail" value={formData.authorEmail} onChange={handleInputChange} placeholder="Enter your email address" required className="w-full p-3 border border-gray-300 rounded text-base box-border" />
-              <small className="text-gray-500 block mt-1">A verification code will be sent to this email</small>
+              <input type="email" id="authorEmail" name="authorEmail" value={formData.authorEmail} onChange={handleInputChange} placeholder={t("yourEmailPlaceholder")} required className="w-full p-3 border border-gray-300 rounded text-base box-border" />
+              <small className="text-gray-500 block mt-1">{t("verificationCodeInfo")}</small>
             </div>
 
             <div className="flex gap-2.5 pt-2.5">
               <button type="submit" disabled={loading || uploadingImage} className="bg-primary text-white py-3 px-5 border-none rounded text-base font-bold cursor-pointer transition-colors duration-300 flex-1 disabled:cursor-not-allowed disabled:bg-gray-300">
-                {uploadingImage ? "Uploading..." : loading ? "Sending..." : "Submit Post"}
+                {uploadingImage ? t("uploading") : loading ? t("sending") : t("submitPost")}
               </button>
 
               <button type="button" onClick={() => setShowAuthorModal(false)} className="bg-transparent text-gray-500 py-3 px-5 border border-gray-500 rounded text-base cursor-pointer flex-1">
-                Cancel
+                {t("cancel")}
               </button>
             </div>
           </form>
@@ -527,9 +542,9 @@ export default function SubmitBlogPost() {
       <Dialog open={showVerificationModal} onOpenChange={setShowVerificationModal}>
         <DialogContent className="max-w-md bg-white p-10 rounded-lg shadow-lg">
           <DialogHeader>
-            <DialogTitle className="text-center text-xl font-bold mb-2">Verify Your Email</DialogTitle>
+            <DialogTitle className="text-center text-xl font-bold mb-2">{t("verifyYourEmail")}</DialogTitle>
             <p className="text-center text-gray-600 mb-4">
-              We&apos;ve sent a 6-digit verification code to <strong>{verificationEmail}</strong>
+              {t("verificationSentTo")} <strong>{verificationEmail}</strong>
             </p>
           </DialogHeader>
 
@@ -540,19 +555,19 @@ export default function SubmitBlogPost() {
           <form onSubmit={handleVerifyCode} className="space-y-4">
             <div>
               <label htmlFor="verificationCode" className="block mb-1 font-bold">
-                Enter Verification Code
+                {t("enterVerificationCode")}
               </label>
-              <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").substring(0, 6))} placeholder="000000" maxLength={6} required className="w-full p-4 border border-gray-300 rounded text-2xl text-center tracking-[8px] box-border" />
-              <small className="text-gray-500 block mt-1">The code expires in 10 minutes</small>
+              <input type="text" id="verificationCode" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").substring(0, 6))} placeholder={t("verificationCodePlaceholder")} maxLength={6} required className="w-full p-4 border border-gray-300 rounded text-2xl text-center tracking-[8px] box-border" />
+              <small className="text-gray-500 block mt-1">{t("codeExpires")}</small>
             </div>
 
             <div className="flex gap-2.5 items-center">
               <button type="submit" disabled={verifyingCode || verificationCode.length !== 6} className="bg-primary text-white py-3 px-5 border-none rounded text-base font-bold cursor-pointer transition-colors duration-300 flex-1 disabled:cursor-not-allowed disabled:bg-gray-300">
-                {verifyingCode ? "Verifying..." : "Verify & Submit"}
+                {verifyingCode ? t("verifying") : t("verifyAndSubmit")}
               </button>
 
               <button type="button" onClick={handleResendCode} disabled={resendingCode} className="bg-transparent py-3 px-5 rounded text-base cursor-pointer flex-1 border border-primary text-primary transition-all duration-300 disabled:cursor-not-allowed">
-                {resendingCode ? "Resending..." : "Resend"}
+                {resendingCode ? t("resending") : t("resend")}
               </button>
             </div>
 
@@ -567,7 +582,7 @@ export default function SubmitBlogPost() {
               }}
               className="bg-transparent text-gray-500 py-2 px-4 border border-gray-500 rounded text-sm cursor-pointer w-full"
             >
-              ← Back to Author Info
+              {t("backToAuthorInfo")}
             </button>
           </form>
         </DialogContent>
@@ -579,12 +594,12 @@ export default function SubmitBlogPost() {
           <DialogHeader>
             <DialogTitle className="items-center flex justify-center text-xl font-bold mb-4">
               <CircleCheck className="stroke-primary" size={40} />
-              Thank You!
+              {t("thankYou")}
             </DialogTitle>
           </DialogHeader>
 
           <div className="text-center mb-4">
-            <p className="text-gray-700 text-base">Your blog post has been successfully submitted and is now under review. You will be notified via email once it is published.</p>
+            <p className="text-gray-700 text-base">{t("submissionSuccess")}</p>
           </div>
 
           <div className="flex gap-2.5">
@@ -595,7 +610,7 @@ export default function SubmitBlogPost() {
               }}
               className="bg-primary text-white py-3 px-5 border-none rounded text-base font-bold cursor-pointer transition-colors duration-300 flex-1"
             >
-              Go to Blog
+              {t("goToBlog")}
             </button>
 
             <button
@@ -615,7 +630,7 @@ export default function SubmitBlogPost() {
               }}
               className="bg-transparent text-gray-500 py-3 px-5 border border-gray-500 rounded text-base cursor-pointer flex-1"
             >
-              Write Another
+              {t("writeAnother")}
             </button>
           </div>
         </DialogContent>

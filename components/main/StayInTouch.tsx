@@ -2,10 +2,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import bgImage from "@/public/Rectangle 21.png";
+import { useTranslations } from "next-intl";
 
 function StayInTouch() {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const t = useTranslations("Contact");
 
   const handleSubmit = () => {
     console.log("Email submitted:", email);
@@ -36,25 +38,25 @@ function StayInTouch() {
         {/* Backdrop Blur Card */}
         <div style={{ backgroundColor: "#11182780" }} className=" backdrop-blur-sm rounded-4xl p-8 md:py-25 border border-white/10">
           {/* Main Heading */}
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Let&apos;s Stay In Touch</h2>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">{t("title")}</h2>
 
           {/* Subtitle */}
-          <p className="text-white text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p className="text-white text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">{t("description")}</p>
 
           {/* Email Form */}
           <div className="w-[70%] mx-auto mb-6">
             <div className="flex flex-col sm:flex-row">
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" className="flex-1 px-6 py-4 rounded-l-md bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 border-0 focus:ring-2 focus:ring-white/50 focus:outline-none transition-all duration-300" />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("emailPlaceholder")} className="flex-1 px-6 py-4 rounded-l-md bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 border-0 focus:ring-2 focus:ring-white/50 focus:outline-none transition-all duration-300" />
               <div className="rounded-r-md bg-white/95 p-2">
                 <button onClick={handleSubmit} disabled={isSubscribed} className="px-8 py-3 bg-primary-foreground cursor-pointer hover:bg-primary text-white font-semibold rounded-md transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-white/50 focus:outline-none disabled:opacity-50 disabled:transform-none">
-                  {isSubscribed ? "Subscribed!" : "Subscribe"}
+                  {isSubscribed ? t("subscribed") : t("subscribe")}
                 </button>
               </div>
             </div>
           </div>
 
           {/* Privacy Notice */}
-          <p className="text-white/80 text-sm font-semibold italic">We will never spam you. We respect your privacy.</p>
+          <p className="text-white/80 text-sm font-semibold italic">{t("privacyNotice")}</p>
         </div>
       </div>
 

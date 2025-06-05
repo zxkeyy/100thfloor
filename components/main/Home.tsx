@@ -4,8 +4,11 @@ import Image from "next/image";
 import modernHouse from "@/public/modern-house.png";
 import fadedLogoBg from "@/public/fadedlogobg.png";
 import logoIcon from "@/public/100thlogo.png";
+import { useTranslations } from "next-intl";
 
 function Home() {
+  const t = useTranslations("Home");
+
   return (
     <div className="min-h-screen items-center relative overflow-x-hidden text-white flex flex-col">
       {/* House Background Image - Right Side */}
@@ -48,24 +51,24 @@ function Home() {
             {/* Welcome Text */}
             <div className="flex items-center space-x-3 text-white/70 font-medium tracking-widest text-3xl">
               <Image src={logoIcon} alt="100th Floor" className="h-8 w-auto" width={32} height={32} />
-              <span>WELCOME TO 100TH FLOOR</span>
+              <span>{t("welcome")}</span>
             </div>
 
             {/* Main Heading */}
             <div className="space-y-2 mb-8">
               <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                Discover Your
+                {t("title")}
                 <br />
-                Dream <span style={{ color: "#176B87" }}>Home</span>
+                {t("titleContinue")} <span style={{ color: "#176B87" }}>{t("titleHighlight")}</span>
               </h1>
             </div>
 
             {/* Description */}
-            <p className="text-white text-lg leading-relaxed max-w-lg mb-8">where the future of architecture intertwines with sustainability to create transformative spaces. we are pioneers in crafting environments that enhance human interactions and respect our planet.</p>
+            <p className="text-white text-lg leading-relaxed max-w-lg mb-8">{t("description")}</p>
 
             {/* CTA Button */}
             <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-3xs py-4 text-xl font-medium rounded-sm group transition-all duration-300">
-              Contact Us
+              {t("contactUs")}
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
             </Button>
           </div>

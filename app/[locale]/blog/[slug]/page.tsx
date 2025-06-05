@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import DOMPurify from "dompurify";
 import fallbackImage from "@/public/fallback-image.png";
+import { useTranslations, useLocale } from "next-intl";
 
 interface BlogPost {
   id: string;
@@ -44,6 +45,9 @@ const comments = [
 
 export default function BlogPostPage() {
   const params = useParams();
+  const t = useTranslations("BlogPost");
+  const bt = useTranslations("Blog");
+  const locale = useLocale();
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -75,6 +79,28 @@ export default function BlogPostPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (locale === "ar") {
+      return date.toLocaleDateString("ar-EG", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const getReadingTime = (content: string) => {
+    const words = content.split(" ").length;
+    const readingTime = Math.ceil(words / 200);
+    return `${readingTime} ${t("minRead")}`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center mt-25">
@@ -89,14 +115,14 @@ export default function BlogPostPage() {
         {/* NavBar Spacer */}
         <div className="w-full h-25" />
         <div className="max-w-[800px] mx-auto my-[50px] p-[20px] text-center">
-          <h1>Error</h1>
+          <h1>{bt("error")}</h1>
           <p className="text-red-500 mb-[20px]">{error}</p>
           <div className="flex gap-[15px] justify-center">
             <button onClick={() => fetchPost(params.slug as string)} className="bg-[#007bff] text-white py-[10px] px-[20px] border-none rounded-[4px] cursor-pointer">
-              Try Again
+              {bt("tryAgain")}
             </button>
             <Link href="/blog" className="bg-[#6c757d] text-white py-[10px] px-[20px] no-underline rounded-[4px]">
-              Back to Blog
+              {t("backToBlog")}
             </Link>
           </div>
         </div>
@@ -120,7 +146,7 @@ export default function BlogPostPage() {
         {/* Back to blog link */}
         <div className="mb-[30px]">
           <Link href="/blog" className="text-primary no-underline text-[0.9rem] hover:underline">
-            ← Back to Blog
+            {t("backToBlog")}
           </Link>
         </div>
 
@@ -130,18 +156,13 @@ export default function BlogPostPage() {
 
           <div className="flex items-center justify-end gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
             <span>
-              By<span className="font-bold"> {post.authorName}</span>
+              {t("by")}
+              <span className="font-bold"> {post.authorName}</span>
             </span>
             <span>•</span>
-            <time>
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
+            <time>{formatDate(post.createdAt)}</time>
             <span>•</span>
-            <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+            <span>{getReadingTime(post.content)}</span>
           </div>
 
           {post.image && (
@@ -198,11 +219,11 @@ export default function BlogPostPage() {
                         wordBreak: "break-word",
                       }}
                       suppressContentEditableWarning={true}
-                      data-placeholder="Write a comment..."
+                      data-placeholder={t("writeComment")}
                     />
                     {/* Comment Button */}
                     <div className="flex items-center p-2">
-                      <button className="px-4 py-3 bg-gray-400 text-white text-sm rounded-lg hover:bg-gray-500 transition-colors whitespace-nowrap">Comment</button>
+                      <button className="px-4 py-3 bg-gray-400 text-white text-sm rounded-lg hover:bg-gray-500 transition-colors whitespace-nowrap">{t("comment")}</button>
                     </div>
                   </div>
                 </div>
@@ -215,7 +236,9 @@ export default function BlogPostPage() {
       <div className="mt-[50px] p-10 flex justify-center">
         <div className="w-full bg-gray-100 py-10 flex justify-center">
           <div className="w-full max-w-[1400px]">
-            <h2 className="text-[1.8rem] font-bold mb-[20px]">You May Like This:</h2>
+            <h2 dir={locale == "ar" ? "rtl" : "ltr"} className="text-[1.8rem] font-bold mb-[20px]">
+              {t("youMayLike")}
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[20px]">
               {relatedPosts.map((post) => (
                 <div key={post.id}>
@@ -224,18 +247,13 @@ export default function BlogPostPage() {
                     <h3 className="text-[1.2rem] font-semibold mb-[10px]">{post.title}</h3>
                     <div className="flex items-center justify-start gap-[5px] text-[#666] text-[0.95rem] mb-[30px]">
                       <span>
-                        By<span className="font-bold"> {post.authorName}</span>
+                        {t("by")}
+                        <span className="font-bold"> {post.authorName}</span>
                       </span>
                       <span>•</span>
-                      <time>
-                        {new Date(post.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </time>
+                      <time>{formatDate(post.createdAt)}</time>
                       <span>•</span>
-                      <span>{Math.ceil(post.content.split(" ").length / 200)} min read</span>
+                      <span>{getReadingTime(post.content)}</span>
                     </div>
                   </Link>
                 </div>

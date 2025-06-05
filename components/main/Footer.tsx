@@ -2,50 +2,55 @@ import { Facebook, Twitter } from "lucide-react";
 import Image from "next/image";
 import logoIcon from "@/public/100thlogo.png";
 import logoText from "@/public/100thlogotext.png";
+import { useTranslations, useLocale } from "next-intl";
 
 function Footer() {
+  const t = useTranslations("Footer");
+  const locale = useLocale();
+
   const footerLinks = {
     product1: {
-      title: "Product",
+      title: t("product"),
       links: [
-        { name: "Features", href: "#" },
-        { name: "Solutions", href: "#" },
-        { name: "Pricing", href: "#" },
-        { name: "Tutorials", href: "#" },
-        { name: "Updates", href: "#" },
+        { name: t("links.features"), href: "#" },
+        { name: t("links.solutions"), href: "#" },
+        { name: t("links.pricing"), href: "#" },
+        { name: t("links.tutorials"), href: "#" },
+        { name: t("links.updates"), href: "#" },
       ],
     },
     remaining1: {
-      title: "Remaining",
+      title: t("remaining"),
       links: [
-        { name: "Blog", href: "#" },
-        { name: "Newsletter", href: "#" },
-        { name: "Help Centre", href: "#" },
-        { name: "Careers", href: "#" },
-        { name: "Support", href: "#" },
+        { name: t("links.blog"), href: "#" },
+        { name: t("links.newsletter"), href: "#" },
+        { name: t("links.helpCentre"), href: "#" },
+        { name: t("links.careers"), href: "#" },
+        { name: t("links.support"), href: "#" },
       ],
     },
     product2: {
-      title: "Product",
+      title: t("product"),
       links: [
-        { name: "Features", href: "#" },
-        { name: "Solutions", href: "#" },
-        { name: "Pricing", href: "#" },
-        { name: "Tutorials", href: "#" },
-        { name: "Updates", href: "#" },
+        { name: t("links.features"), href: "#" },
+        { name: t("links.solutions"), href: "#" },
+        { name: t("links.pricing"), href: "#" },
+        { name: t("links.tutorials"), href: "#" },
+        { name: t("links.updates"), href: "#" },
       ],
     },
     remaining2: {
-      title: "Remaining",
+      title: t("remaining"),
       links: [
-        { name: "Blog", href: "#" },
-        { name: "Newsletter", href: "#" },
-        { name: "Help Centre", href: "#" },
-        { name: "Careers", href: "#" },
-        { name: "Support", href: "#" },
+        { name: t("links.blog"), href: "#" },
+        { name: t("links.newsletter"), href: "#" },
+        { name: t("links.helpCentre"), href: "#" },
+        { name: t("links.careers"), href: "#" },
+        { name: t("links.support"), href: "#" },
       ],
     },
   };
+
   return (
     <footer style={{ backgroundColor: "#02131A" }} className="text-white w-full">
       <div className="max-w-[1400px] mx-auto px-6 py-12">
@@ -59,14 +64,14 @@ function Footer() {
             </div>
 
             {/* Description */}
-            <p className="text-white font-semibold leading-relaxed mb-6">We are pioneers in crafting environments that enhance human interactions and respect our planet.</p>
+            <p className={`text-white font-semibold leading-relaxed mb-6 ${locale === "ar" ? "text-right" : "text-left"}`}>{t("description")}</p>
 
             {/* Social Media */}
             <div className="flex space-x-4">
               <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+              <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors">
                 <Twitter size={20} />
               </a>
               <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
@@ -77,13 +82,13 @@ function Footer() {
 
           {/* Links Columns */}
           {Object.entries(footerLinks).map(([key, section]) => (
-            <div key={key} className="col-span-1 flex justify-end">
+            <div key={key} className={`col-span-1 flex ${locale === "ar" ? "justify-start" : "justify-end"}`}>
               <div>
-                <h3 className="font-semibold text-white mb-4">{section.title}</h3>
+                <h3 className={`font-semibold text-white mb-4 ${locale === "ar" ? "text-right" : "text-left"}`}>{section.title}</h3>
                 <ul className="space-y-3">
                   {section.links.map((link, index) => (
                     <li key={index}>
-                      <a href={link.href} className="text-gray-400 hover:text-white transition-colors text-sm">
+                      <a href={link.href} className={`text-gray-400 hover:text-white transition-colors text-sm ${locale === "ar" ? "text-right" : "text-left"} block`}>
                         {link.name}
                       </a>
                     </li>
@@ -95,8 +100,8 @@ function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-800 mt-20 pt-8">
-          <p className="text-center font-bold text-sm">Copyright © 2024 Arockt. All rights reserved.</p>
+        <div className="border-t border-gray-800 mt-20 pt-8 w-full flex justify-center">
+          <p className={`text-center font-bold text-sm ${locale === "ar" ? "text-right" : "text-left"}`}>{t("copyright")}</p>
         </div>
       </div>
     </footer>

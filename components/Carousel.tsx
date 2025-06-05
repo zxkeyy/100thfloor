@@ -5,28 +5,30 @@ import Image from "next/image";
 import image1 from "@/public/Rectangle 6.png";
 import image2 from "@/public/Rectangle 7.png";
 import image3 from "@/public/Rectangle 8.png";
+import { useTranslations } from "next-intl";
 
 export default function ImageCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const t = useTranslations("Services.carousel");
 
   const slides = [
     {
       id: 1,
-      title: "Interior Design",
+      title: t("interiorDesign"),
       image: image1,
-      description: "Modern architectural interior spaces",
+      description: t("interiorDesignDesc"),
     },
     {
       id: 2,
-      title: "Construction",
+      title: t("construction"),
       image: image2,
-      description: "Professional construction services",
+      description: t("constructionDesc"),
     },
     {
       id: 3,
-      title: "Planning",
+      title: t("planning"),
       image: image3,
-      description: "Strategic project planning",
+      description: t("planningDesc"),
     },
   ];
 
