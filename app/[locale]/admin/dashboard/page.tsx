@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { LogOut, Filter, BarChart3, FileText, CheckCircle, XCircle, Clock, Trash2, Eye } from "lucide-react";
+import { LogOut, Filter, BarChart3, FileText, CheckCircle, XCircle, Clock, Trash2, Eye, MessageSquare } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import DOMPurify from "dompurify";
 
@@ -19,14 +19,30 @@ interface BlogPost {
   image?: string;
 }
 
+interface Comment {
+  id: string;
+  content: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: string;
+  blogPost: {
+    id: string;
+    title: string;
+    slug: string;
+  };
+}
+
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [commentsLoading, setCommentsLoading] = useState(true);
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("PENDING");
+  const [commentFilter, setCommentFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("PENDING");
   const [previewPost, setPreviewPost] = useState<BlogPost | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
 
   useEffect(() => {
     if (status === "loading") return;
@@ -35,6 +51,7 @@ export default function AdminDashboard() {
       return;
     }
     fetchPosts();
+    fetchComments();
   }, [session, status, router]);
 
   const fetchPosts = async () => {
@@ -50,6 +67,22 @@ export default function AdminDashboard() {
       console.error("Error fetching posts:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      const response = await fetch("/api/admin/comments");
+      if (response.ok) {
+        const data = await response.json();
+        setComments(data);
+      } else {
+        console.error("Failed to fetch comments");
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setCommentsLoading(false);
     }
   };
 
@@ -101,14 +134,63 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleCommentApprove = async (commentId: string) => {
+    try {
+      const response = await fetch(`/api/admin/comments/${commentId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "APPROVED" }),
+      });
+
+      if (response.ok) {
+        setComments(comments.map((comment) => (comment.id === commentId ? { ...comment, status: "APPROVED" as const } : comment)));
+      }
+    } catch (error) {
+      console.error("Error approving comment:", error);
+    }
+  };
+
+  const handleCommentReject = async (commentId: string) => {
+    try {
+      const response = await fetch(`/api/admin/comments/${commentId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "REJECTED" }),
+      });
+
+      if (response.ok) {
+        setComments(comments.map((comment) => (comment.id === commentId ? { ...comment, status: "REJECTED" as const } : comment)));
+      }
+    } catch (error) {
+      console.error("Error rejecting comment:", error);
+    }
+  };
+
+  const handleCommentDelete = async (commentId: string) => {
+    if (!confirm("Are you sure you want to delete this comment?")) return;
+
+    try {
+      const response = await fetch(`/api/admin/comments/${commentId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setComments(comments.filter((comment) => comment.id !== commentId));
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
   const handlePreview = (post: BlogPost) => {
     setPreviewPost(post);
     setShowPreviewModal(true);
   };
 
   const filteredPosts = posts.filter((post) => (filter === "ALL" ? true : post.status === filter));
+  const filteredComments = comments.filter((comment) => (commentFilter === "ALL" ? true : comment.status === commentFilter));
 
-  const getStatusConfig = (status: BlogPost["status"]) => {
+  const getStatusConfig = (status: BlogPost["status"] | Comment["status"]) => {
     switch (status) {
       case "PENDING":
         return {
@@ -148,9 +230,11 @@ export default function AdminDashboard() {
 
   const stats = [
     { label: "Total Posts", value: posts.length, icon: FileText, color: "text-blue-600 bg-blue-100" },
-    { label: "Pending", value: posts.filter((p) => p.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
-    { label: "Approved", value: posts.filter((p) => p.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
-    { label: "Rejected", value: posts.filter((p) => p.status === "REJECTED").length, icon: XCircle, color: "text-red-600 bg-red-100" },
+    { label: "Pending Posts", value: posts.filter((p) => p.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
+    { label: "Approved Posts", value: posts.filter((p) => p.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
+    { label: "Total Comments", value: comments.length, icon: MessageSquare, color: "text-purple-600 bg-purple-100" },
+    { label: "Pending Comments", value: comments.filter((c) => c.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
+    { label: "Approved Comments", value: comments.filter((c) => c.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
   ];
 
   return (
@@ -163,26 +247,27 @@ export default function AdminDashboard() {
               <BarChart3 className="h-8 w-8 text-primary" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600">Manage blog posts and content</p>
+                <p className="text-sm text-gray-600">Manage blog posts and comments</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">Welcome back</p>
-                <p className="text-sm text-gray-600">{session.user?.email}</p>
+                <p className="text-sm font-medium text-gray-900">{session.user?.email}</p>
+                <p className="text-xs text-gray-600">Administrator</p>
               </div>
-              <button onClick={() => signOut()} className="inline-flex items-center px-4 py-2 border border-red-300 rounded-lg text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+              <button onClick={() => signOut()} className="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                Sign Out
               </button>
             </div>
           </div>
         </div>
       </header>
 
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -190,9 +275,9 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
-                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
                   </div>
-                  <div className={`p-3 rounded-lg ${stat.color}`}>
+                  <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center`}>
                     <Icon className="h-6 w-6" />
                   </div>
                 </div>
@@ -201,117 +286,253 @@ export default function AdminDashboard() {
           })}
         </div>
 
-        {/* Filter Controls */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex items-center space-x-4">
-            <Filter className="h-5 w-5 text-gray-400" />
-            <label className="text-sm font-medium text-gray-700">Filter by status:</label>
-            <select value={filter} onChange={(e) => setFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-              <option value="ALL">All Posts ({posts.length})</option>
-              <option value="PENDING">Pending ({posts.filter((p) => p.status === "PENDING").length})</option>
-              <option value="APPROVED">Approved ({posts.filter((p) => p.status === "APPROVED").length})</option>
-              <option value="REJECTED">Rejected ({posts.filter((p) => p.status === "REJECTED").length})</option>
-            </select>
+        {/* Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              <button onClick={() => setActiveTab("posts")} className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "posts" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`}>
+                Blog Posts ({posts.length})
+              </button>
+              <button onClick={() => setActiveTab("comments")} className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "comments" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`}>
+                Comments ({comments.length})
+              </button>
+            </nav>
           </div>
         </div>
 
-        {/* Posts List */}
-        {filteredPosts.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No posts found</h3>
-            <p className="text-gray-600">There are no posts matching your current filter.</p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {filteredPosts.map((post) => {
-              const statusConfig = getStatusConfig(post.status);
-              const StatusIcon = statusConfig.icon;
+        {/* Posts Tab */}
+        {activeTab === "posts" && (
+          <>
+            {/* Posts Filter */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Blog Posts</h2>
+              <div className="flex items-center space-x-4">
+                <Filter className="h-5 w-5 text-gray-400" />
+                <select value={filter} onChange={(e) => setFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <option value="ALL">All Posts ({posts.length})</option>
+                  <option value="PENDING">Pending ({posts.filter((p) => p.status === "PENDING").length})</option>
+                  <option value="APPROVED">Approved ({posts.filter((p) => p.status === "APPROVED").length})</option>
+                  <option value="REJECTED">Rejected ({posts.filter((p) => p.status === "REJECTED").length})</option>
+                </select>
+              </div>
+            </div>
 
-              return (
-                <div key={post.id} className={`bg-white rounded-xl shadow-sm border-2 ${statusConfig.bg} overflow-hidden transition-all hover:shadow-md`}>
-                  <div className="p-6">
-                    {/* Post Header */}
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex-1">
-                        <h2 className="text-xl font-bold text-gray-900 mb-3">{post.title}</h2>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-                          <span className="font-medium">{post.authorName}</span>
-                          <span>•</span>
-                          <span>{post.authorEmail}</span>
-                          <span>•</span>
-                          <span>
-                            {new Date(post.createdAt).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </span>
+            {/* Posts List */}
+            {filteredPosts.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No posts found</h3>
+                <p className="text-gray-600">There are no posts matching your current filter.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {filteredPosts.map((post) => {
+                  const statusConfig = getStatusConfig(post.status);
+                  const StatusIcon = statusConfig.icon;
+
+                  return (
+                    <div key={post.id} className={`bg-white rounded-xl shadow-sm border-2 ${statusConfig.bg} overflow-hidden transition-all hover:shadow-md`}>
+                      <div className="p-6">
+                        {/* Post Header */}
+                        <div className="flex items-start justify-between mb-6">
+                          <div className="flex-1">
+                            <h2 className="text-xl font-bold text-gray-900 mb-3">{post.title}</h2>
+                            <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                              <span className="font-medium">{post.authorName}</span>
+                              <span>•</span>
+                              <span>{post.authorEmail}</span>
+                              <span>•</span>
+                              <span>
+                                {new Date(post.createdAt).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <StatusIcon className={`h-5 w-5 ${statusConfig.iconColor}`} />
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{post.status}</span>
+                          </div>
+                        </div>
+
+                        {/* Post Image */}
+                        {post.image && (
+                          <div className="mb-6">
+                            <img src={post.image} alt="Post image" className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200" />
+                          </div>
+                        )}
+
+                        {/* Post Content */}
+                        <div className="mb-6">
+                          <div className="prose prose-sm max-w-none text-gray-700 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.content }} />
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex items-center space-x-3 pt-4 border-t border-gray-200">
+                          {/* Preview Button */}
+                          <button onClick={() => handlePreview(post)} className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                            <Eye className="h-4 w-4 mr-2" />
+                            Preview
+                          </button>
+
+                          {post.status === "PENDING" && (
+                            <>
+                              <button onClick={() => handleApprove(post.id)} className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                                <CheckCircle className="h-4 w-4 mr-2" />
+                                Approve
+                              </button>
+                              <button onClick={() => handleReject(post.id)} className="inline-flex items-center px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors">
+                                <XCircle className="h-4 w-4 mr-2" />
+                                Reject
+                              </button>
+                            </>
+                          )}
+
+                          {post.status === "REJECTED" && (
+                            <button onClick={() => handleApprove(post.id)} className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                              <CheckCircle className="h-4 w-4 mr-2" />
+                              Approve
+                            </button>
+                          )}
+
+                          {post.status === "APPROVED" && (
+                            <button onClick={() => handleReject(post.id)} className="inline-flex items-center px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors">
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Reject
+                            </button>
+                          )}
+
+                          {/* Delete Button */}
+                          <button onClick={() => handleDelete(post.id)} className="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors ml-auto">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </button>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-3">
-                        <StatusIcon className={`h-5 w-5 ${statusConfig.iconColor}`} />
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{post.status}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Comments Tab */}
+        {activeTab === "comments" && (
+          <>
+            {/* Comments Filter */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Comments</h2>
+              <div className="flex items-center space-x-4">
+                <Filter className="h-5 w-5 text-gray-400" />
+                <select value={commentFilter} onChange={(e) => setCommentFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <option value="ALL">All Comments ({comments.length})</option>
+                  <option value="PENDING">Pending ({comments.filter((c) => c.status === "PENDING").length})</option>
+                  <option value="APPROVED">Approved ({comments.filter((c) => c.status === "APPROVED").length})</option>
+                  <option value="REJECTED">Rejected ({comments.filter((c) => c.status === "REJECTED").length})</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Comments List */}
+            {commentsLoading ? (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              </div>
+            ) : filteredComments.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No comments found</h3>
+                <p className="text-gray-600">There are no comments matching your current filter.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredComments.map((comment) => {
+                  const statusConfig = getStatusConfig(comment.status);
+                  const StatusIcon = statusConfig.icon;
+
+                  return (
+                    <div key={comment.id} className={`bg-white rounded-xl shadow-sm border-2 ${statusConfig.bg} overflow-hidden transition-all hover:shadow-md`}>
+                      <div className="p-6">
+                        {/* Comment Header */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <h3 className="text-sm font-medium text-gray-900">
+                                Comment on: <span className="text-primary">{comment.blogPost.title}</span>
+                              </h3>
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <StatusIcon className={`h-5 w-5 ${statusConfig.iconColor}`} />
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{comment.status}</span>
+                          </div>
+                        </div>
+
+                        {/* Comment Content */}
+                        <div className="mb-4">
+                          <p className="text-gray-700 text-sm leading-relaxed">{comment.content}</p>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex items-center space-x-3 pt-4 border-t border-gray-200">
+                          {comment.status === "PENDING" && (
+                            <>
+                              <button onClick={() => handleCommentApprove(comment.id)} className="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors">
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Approve
+                              </button>
+                              <button onClick={() => handleCommentReject(comment.id)} className="inline-flex items-center px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors">
+                                <XCircle className="h-3 w-3 mr-1" />
+                                Reject
+                              </button>
+                            </>
+                          )}
+
+                          {comment.status === "REJECTED" && (
+                            <button onClick={() => handleCommentApprove(comment.id)} className="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors">
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                              Approve
+                            </button>
+                          )}
+
+                          {comment.status === "APPROVED" && (
+                            <button onClick={() => handleCommentReject(comment.id)} className="inline-flex items-center px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors">
+                              <XCircle className="h-3 w-3 mr-1" />
+                              Reject
+                            </button>
+                          )}
+
+                          {/* View Post Button */}
+                          <a href={`/blog/${comment.blogPost.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors">
+                            <Eye className="h-3 w-3 mr-1" />
+                            View Post
+                          </a>
+
+                          {/* Delete Button */}
+                          <button onClick={() => handleCommentDelete(comment.id)} className="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors ml-auto">
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
-
-                    {/* Post Image */}
-                    {post.image && (
-                      <div className="mb-6">
-                        <img src={post.image} alt="Post image" className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200" />
-                      </div>
-                    )}
-
-                    {/* Post Content */}
-                    <div className="mb-6">
-                      <div className="prose prose-sm max-w-none text-gray-700 line-clamp-3" dangerouslySetInnerHTML={{ __html: post.content }} />
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex items-center space-x-3 pt-4 border-t border-gray-200">
-                      {/* Preview Button */}
-                      <button onClick={() => handlePreview(post)} className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                        <Eye className="h-4 w-4 mr-2" />
-                        Preview
-                      </button>
-
-                      {post.status === "PENDING" && (
-                        <>
-                          <button onClick={() => handleApprove(post.id)} className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Approve
-                          </button>
-                          <button onClick={() => handleReject(post.id)} className="inline-flex items-center px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors">
-                            <XCircle className="h-4 w-4 mr-2" />
-                            Reject
-                          </button>
-                        </>
-                      )}
-
-                      {post.status === "REJECTED" && (
-                        <button onClick={() => handleApprove(post.id)} className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Approve
-                        </button>
-                      )}
-
-                      {post.status === "APPROVED" && (
-                        <button onClick={() => handleReject(post.id)} className="inline-flex items-center px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors">
-                          <XCircle className="h-4 w-4 mr-2" />
-                          Reject
-                        </button>
-                      )}
-
-                      <button onClick={() => handleDelete(post.id)} className="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors ml-auto">
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
       </main>
 
@@ -365,11 +586,10 @@ export default function AdminDashboard() {
               {previewPost && (
                 <>
                   <div className="flex items-center space-x-2">
-                    <div className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusConfig(previewPost.status).badge}`}>{previewPost.status}</div>
-                    <span className="text-sm text-gray-600">Status: {previewPost.status.toLowerCase()}</span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusConfig(previewPost.status).badge}`}>{previewPost.status}</span>
                   </div>
-                  <button onClick={() => setShowPreviewModal(false)} className="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors">
-                    Close Preview
+                  <button onClick={() => setShowPreviewModal(false)} className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                    Close
                   </button>
                 </>
               )}

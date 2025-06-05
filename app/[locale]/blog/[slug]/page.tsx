@@ -25,23 +25,12 @@ interface ApiResponse {
   relatedPosts: BlogPost[];
 }
 
-const comments = [
-  {
-    id: 1,
-    text: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-    timeAgo: "5 min ago",
-  },
-  {
-    id: 2,
-    text: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-    timeAgo: "5 min ago",
-  },
-  {
-    id: 3,
-    text: "I really appreciate the insights and perspective shared in this article. It's definitely given me something to think about and has helped me see things from a different angle. Thank you for writing and sharing!",
-    timeAgo: "5 min ago",
-  },
-];
+interface Comment {
+  id: string;
+  content: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: string;
+}
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -51,12 +40,24 @@ export default function BlogPostPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [commentMessage, setCommentMessage] = useState("");
+  const [commentError, setCommentError] = useState("");
 
   useEffect(() => {
     if (params.slug) {
       fetchPost(params.slug as string);
     }
   }, [params.slug]);
+
+  useEffect(() => {
+    if (data?.post) {
+      fetchComments(data.post.id);
+    }
+  }, [data?.post]);
 
   const fetchPost = async (slug: string) => {
     setLoading(true);
@@ -76,6 +77,57 @@ export default function BlogPostPage() {
       setError("An error occurred while fetching the post");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchComments = async (postId: string) => {
+    setCommentsLoading(true);
+    try {
+      const response = await fetch(`/api/comments/${postId}`);
+      if (response.ok) {
+        const comments = await response.json();
+        setComments(comments);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !data?.post) return;
+
+    setSubmittingComment(true);
+    setCommentError("");
+    setCommentMessage("");
+
+    try {
+      const response = await fetch(`/api/comments/${data.post.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: newComment.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setCommentMessage(result.message);
+        setNewComment("");
+        // Don't refresh comments since pending comments won't show
+      } else {
+        const errorData = await response.json();
+        setCommentError(errorData.error || "Failed to submit comment");
+      }
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      setCommentError("An error occurred while submitting your comment");
+    } finally {
+      setSubmittingComment(false);
     }
   };
 
@@ -99,6 +151,23 @@ export default function BlogPostPage() {
     const words = content.split(" ").length;
     const readingTime = Math.ceil(words / 200);
     return `${readingTime} ${t("minRead")}`;
+  };
+
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+
+    if (diffInMinutes < 1) return t("justNow");
+    if (diffInMinutes < 60) return `${diffInMinutes} ${t("minAgo")}`;
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} ${t("hourAgo")}`;
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays} ${t("dayAgo")}`;
+
+    return formatDate(dateString);
   };
 
   if (loading) {
@@ -186,53 +255,66 @@ export default function BlogPostPage() {
 
         {/* Comments section */}
         <div className="bg-gray-50 p-4 md:p-6 lg:p-8 rounded-lg border border-gray-200">
+          <h3 className="text-lg md:text-xl font-bold mb-4 md:mb-6 text-gray-900">
+            {t("comments")} ({comments.length})
+          </h3>
+
           {/* Comments List */}
           <div className="space-y-4 md:space-y-6 mb-6 md:mb-8">
-            {comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3 md:gap-4">
-                {/* Avatar */}
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-slate-600 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                    </svg>
+            {commentsLoading ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : comments.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <p>{t("noComments")}</p>
+              </div>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id} className="flex gap-3 md:gap-4">
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-slate-600 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Comment Content */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-2">{comment.content}</p>
+                    <p className="text-gray-400 text-xs md:text-sm">{getTimeAgo(comment.createdAt)}</p>
                   </div>
                 </div>
-
-                {/* Comment Content */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-2">{comment.text}</p>
-                  <p className="text-gray-400 text-xs md:text-sm">{comment.timeAgo}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
           {/* Comment Input Section */}
           <div className="border-t border-gray-200 pt-6">
-            <div className="border border-gray-300 rounded-lg bg-white overflow-hidden shadow-sm">
-              <div className="flex flex-col md:flex-row">
-                <div
-                  contentEditable
-                  className="flex-1 p-3 md:p-4 outline-none text-sm md:text-base text-gray-700 min-h-20 md:min-h-24 resize-none"
-                  style={{
-                    wordWrap: "break-word",
-                    overflowWrap: "break-word",
-                    whiteSpace: "pre-wrap",
-                    maxWidth: "100%",
-                    overflow: "hidden",
-                    textOverflow: "clip",
-                    wordBreak: "break-word",
-                  }}
-                  suppressContentEditableWarning={true}
-                  data-placeholder={t("writeComment")}
-                />
-                {/* Comment Button */}
-                <div className="flex items-center justify-end p-3 md:p-4 border-t md:border-t-0 md:border-l border-gray-200">
-                  <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-primary text-white text-sm md:text-base rounded-md hover:bg-primary/90 transition-colors">{t("comment")}</button>
+            {commentMessage && <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg border border-green-200">{commentMessage}</div>}
+
+            {commentError && <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg border border-red-200">{commentError}</div>}
+
+            <form onSubmit={handleCommentSubmit}>
+              <div className="border border-gray-300 rounded-lg bg-white overflow-hidden shadow-sm">
+                <div className="flex flex-col md:flex-row">
+                  <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} className="flex-1 p-3 md:p-4 outline-none text-sm md:text-base text-gray-700 min-h-20 md:min-h-24 resize-none border-none" placeholder={t("writeComment")} maxLength={1000} disabled={submittingComment} />
+                  {/* Comment Button */}
+                  <div className="flex items-center justify-end p-3 md:p-4 border-t md:border-t-0 md:border-l border-gray-200">
+                    <button type="submit" disabled={submittingComment || !newComment.trim()} className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-primary text-white text-sm md:text-base rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                      {submittingComment ? t("submitting") : t("comment")}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div className="mt-2 text-right">
+                <small className="text-gray-500">
+                  {newComment.length}/1000 {t("characters")}
+                </small>
+              </div>
+            </form>
           </div>
         </div>
       </div>

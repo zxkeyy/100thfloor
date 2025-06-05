@@ -153,8 +153,16 @@
     "by": "By",
     "minRead": "min read",
     "youMayLike": "You May Like This:",
+    "comments": "Comments",
+    "noComments": "No comments yet. Be the first to comment!",
     "writeComment": "Write a comment...",
-    "comment": "Comment"
+    "comment": "Comment",
+    "submitting": "Submitting...",
+    "characters": "characters",
+    "justNow": "just now",
+    "minAgo": "min ago",
+    "hourAgo": "hour ago",
+    "dayAgo": "day ago"
   },
   "Footer": {
     "description": "We are pioneers in crafting environments that enhance human interactions and respect our planet.",
