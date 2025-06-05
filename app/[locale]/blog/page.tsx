@@ -123,7 +123,9 @@ export default function BlogPage() {
                 {posts.slice(0, 1).map((post) => (
                   <div key={post.id} className="row-span-3">
                     <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800">
-                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-[400px] object-cover rounded mb-2.5" />
+                      <div className="w-full aspect-[1.57] flex-shrink-0">
+                        <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                      </div>
                       <h3 className="text-5xl text-black leading-tight font-semibold mb-2.5">{post.title}</h3>
                       <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm">
                         <span>
@@ -143,7 +145,9 @@ export default function BlogPage() {
                 {posts.slice(1, 4).map((post) => (
                   <div key={post.id} className="w-full">
                     <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800 flex h-full w-full">
-                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-4/5 h-full object-cover rounded mb-2.5" />
+                      <div className="w-[300px] h-[180px] flex-shrink-0">
+                        <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                      </div>
                       <div className="py-2 pl-2 w-full overflow-hidden text-ellipsis">
                         <h3 className="text-xl text-black leading-8 font-semibold mb-2.5 w-full overflow-hidden text-ellipsis">{post.title}</h3>
                         <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm mb-8">
@@ -167,14 +171,16 @@ export default function BlogPage() {
           </div>
 
           {posts.length > 4 && (
-            <div className="mt-12 p-2.5 flex justify-center">
-              <div className="w-full bg-gray-100 py-5 flex justify-center">
+            <div className="mt-12 px-5 flex justify-center">
+              <div className="w-full bg-gray-100 py-20 flex justify-center">
                 <div className="w-full max-w-7xl">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-15">
                     {posts.slice(4, 6).map((post) => (
                       <div key={post.id}>
                         <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800">
-                          <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-[450px] object-cover rounded mb-2.5" />
+                          <div className="w-full aspect-[1.57] flex-shrink-0">
+                            <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                          </div>
                           <h3 className="text-5xl text-black leading-tight font-semibold mb-2.5">{post.title}</h3>
                           <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm mb-8">
                             <span>
@@ -203,7 +209,9 @@ export default function BlogPage() {
                 {posts.slice(6, 9).map((post) => (
                   <div key={post.id} className="w-full">
                     <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800 flex h-full w-full">
-                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-4/5 h-full object-cover rounded mb-2.5" />
+                      <div className="w-[300px] h-[180px] flex-shrink-0">
+                        <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                      </div>
                       <div className="py-2 pl-2 w-full overflow-hidden text-ellipsis">
                         <h3 className="text-xl text-black leading-8 font-semibold mb-2.5 w-full overflow-hidden text-ellipsis">{post.title}</h3>
                         <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm mb-8">
@@ -225,7 +233,9 @@ export default function BlogPage() {
                 {posts.slice(9, 10).map((post) => (
                   <div key={post.id} className="row-span-3">
                     <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800">
-                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-[400px] object-cover rounded mb-2.5" />
+                      <div className="w-full aspect-[1.57] flex-shrink-0">
+                        <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                      </div>
                       <h3 className="text-5xl text-black leading-tight font-semibold mb-2.5">{post.title}</h3>
                       <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm">
                         <span>
@@ -247,14 +257,16 @@ export default function BlogPage() {
           )}
 
           {posts.length > 10 && (
-            <div className="mt-12 p-2.5 flex justify-center">
-              <div className="w-full bg-gray-100 py-8 flex justify-center">
+            <div className="mt-12 px-5 flex justify-center">
+              <div className="w-full bg-gray-100 py-20 flex justify-center">
                 <div className="w-full max-w-7xl">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-15">
                     {posts.slice(10, 13).map((post) => (
                       <div key={post.id}>
                         <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800">
-                          <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-[250px] object-cover rounded mb-2.5" />
+                          <div className="w-full aspect-[1.57] flex-shrink-0">
+                            <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                          </div>
                           <h3 className="text-2xl text-black leading-8 font-semibold mb-2.5">{post.title}</h3>
                           <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm mb-8">
                             <span>
@@ -283,7 +295,9 @@ export default function BlogPage() {
                 {posts.slice(13, displayedPosts).map((post) => (
                   <div key={post.id} className="w-full">
                     <Link href={`/blog/${post.slug}`} className="no-underline text-gray-800 flex h-full w-full">
-                      <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-[270px] h-full object-cover rounded mb-2.5" />
+                      <div className="w-[270px] h-[150px] flex-shrink-0">
+                        <img src={post.image ? post.image : fallbackImage.src} alt={post.title} className="w-full h-full object-cover rounded mb-2.5" />
+                      </div>
                       <div className="py-2 pl-2 w-full overflow-hidden text-ellipsis">
                         <h3 className="text-xl text-black leading-8 font-semibold mb-2.5 w-full overflow-hidden text-ellipsis">{post.title}</h3>
                         <div dir={locale == "ar" ? "rtl" : "ltr"} className="flex items-center justify-start gap-1.5 text-gray-600 text-sm mb-8">
