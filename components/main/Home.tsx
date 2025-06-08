@@ -2,10 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import Image from "next/image";
 import modernHouse from "@/public/modern-house.png";
 import fadedLogoBg from "@/public/fadedlogobg.png";
-import logoIcon from "@/public/100thlogo.png";
+import Logo from "../Logo";
 
 function Home() {
   const t = useTranslations("Home");
@@ -83,7 +82,7 @@ function Home() {
           <div className="max-w-2xl">
             {/* Welcome Text - Responsive */}
             <div className={`flex items-center space-x-2 md:space-x-3 text-white/70 font-medium mb-4 md:mb-6 ${isArabic ? "text-lg md:text-2xl lg:text-3xl" : "tracking-wide md:tracking-widest text-lg md:text-2xl lg:text-3xl"}`}>
-              <Image src={logoIcon || "/placeholder.svg"} alt="100th Floor" className="h-6 md:h-8 w-auto" width={32} height={32} />
+              <Logo className="h-6 md:h-8 w-auto" width={32} height={32} />
               <span>{t("welcome")}</span>
             </div>
 

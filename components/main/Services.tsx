@@ -1,11 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import logoIcon from "@/public/100thlogo.png";
 import { ArrowRight } from "lucide-react";
 import ImageCarousel from "@/components/Carousel";
-import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
+import Logo from "../Logo";
 
 function Services() {
   const t = useTranslations("Services");
@@ -23,7 +22,7 @@ function Services() {
           <div className="w-full lg:w-[50%] flex flex-col justify-center text-center lg:text-left">
             {/* Section Title */}
             <div className={`flex items-center justify-center lg:justify-start space-x-2 md:space-x-3 text-gray-500 ${isArabic ? "" : "tracking-wide md:tracking-widest"} text-lg md:text-2xl lg:text-3xl mb-4 md:mb-5`}>
-              <Image src={logoIcon || "/placeholder.svg"} alt="100th Floor" style={{ color: "#176B87" }} className="h-6 md:h-8 w-auto" width={32} height={32} />
+              <Logo color="#176B87" className="h-6 md:h-8 w-auto" width={5} height={5} />
               <span>{t("sectionTitle")}</span>
             </div>
 

@@ -1,11 +1,10 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { Globe, Menu, X } from "lucide-react";
-import Image from "next/image";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import logoIcon from "@/public/100thlogo.png";
-import logoText from "@/public/100thlogotext.png";
+import Logo from "./Logo";
+import LogoText from "./LogoText";
 
 // Define page variants - add more pages as needed
 const PAGE_VARIANTS = {
@@ -59,6 +58,7 @@ export function Navbar() {
         hover: "hover:text-cyan-400",
         active: "text-white",
         settings: "text-white/70 hover:text-white",
+        logo: "white", // Logo color for scrolled/mobile menu state
       };
     }
 
@@ -69,6 +69,7 @@ export function Navbar() {
           hover: "hover:text-primary",
           active: "text-secondary-foreground",
           settings: "text-secondary-foreground hover:text-primary",
+          logo: "#176b87", // Logo color for light variant
         }
       : {
           primary: "text-white",
@@ -76,6 +77,7 @@ export function Navbar() {
           hover: "hover:text-cyan-400",
           active: "text-white",
           settings: "text-white/70 hover:text-white",
+          logo: "white", // Logo color for dark variant
         };
   }, [isScrolled, variant, mobileMenuOpen]);
 
@@ -182,8 +184,8 @@ export function Navbar() {
         <div className="relative flex items-center justify-between py-4 md:py-6 px-4 md:px-6 max-w-[1400px] w-full">
           {/* Logo */}
           <div className="flex items-center gap-2 md:gap-3 cursor-pointer z-20" onClick={() => scrollToSection("home")}>
-            <Image src={logoIcon || "/placeholder.svg"} alt="100th Floor" width={56} height={56} className="h-10 w-auto md:h-14" priority />
-            <Image src={logoText || "/placeholder.svg"} alt="100th Floor" width={150} height={48} className="h-8 w-auto md:h-12" priority />
+            <Logo width={56} height={56} color={colors.logo} className="h-10 w-auto md:h-14" />
+            <LogoText width={150} height={48} color={colors.logo} className="h-8 w-auto md:h-12" />
           </div>
 
           {/* Mobile Menu Button */}
