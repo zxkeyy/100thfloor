@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import logoIcon from "@/public/100thlogo.png";
 import { ArrowRight } from "lucide-react";
@@ -11,20 +13,24 @@ function Services() {
   const isArabic = locale === "ar";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4  mt-20 lg:mt-0">
       {/* NavBar Spacer */}
-      <div className="w-full h-25" />
+      <div className="w-full h-16 md:h-25" />
 
       <div className="max-w-[1400px] w-full">
-        <div className="flex items-center">
-          <div className="w-[50%] flex flex-col justify-center ">
-            <div className={`flex items-center space-x-3 text-gray-500 ${isArabic ? "" : "tracking-widest"} text-3xl mb-5`}>
-              <Image src={logoIcon} alt="100th Floor" style={{ color: "#176B87" }} className="h-8 w-auto" width={32} height={32} />
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+          {/* Content Section */}
+          <div className="w-full lg:w-[50%] flex flex-col justify-center text-center lg:text-left">
+            {/* Section Title */}
+            <div className={`flex items-center justify-center lg:justify-start space-x-2 md:space-x-3 text-gray-500 ${isArabic ? "" : "tracking-wide md:tracking-widest"} text-lg md:text-2xl lg:text-3xl mb-4 md:mb-5`}>
+              <Image src={logoIcon || "/placeholder.svg"} alt="100th Floor" style={{ color: "#176B87" }} className="h-6 md:h-8 w-auto" width={32} height={32} />
               <span>{t("sectionTitle")}</span>
             </div>
-            <div className="mb-4">
-              <div className="mb-4">
-                <h1 className="text-6xl font-bold leading-tight">
+
+            {/* Main Content */}
+            <div className="mb-6 md:mb-8">
+              <div className="mb-4 md:mb-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                   {t("title")}
                   <br />
                   <span style={{ color: "#176B87" }}>{t("titleHighlight")}</span>
@@ -32,19 +38,28 @@ function Services() {
                   {t("titleContinue")}
                 </h1>
               </div>
-              <p className="text-gray-500 text-lg  leading-relaxed max-w-lg">{t("description")}</p>
+              <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">{t("description")}</p>
             </div>
-            <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-xs py-3 text-xl font-medium rounded-sm group transition-all duration-300">
-              {t("cta")}
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-3 transition-transform" />
-            </Button>
+
+            {/* CTA Button */}
+            <div className="flex justify-center lg:justify-start">
+              <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 text-lg md:text-xl font-medium rounded-sm group transition-all duration-300">
+                {t("cta")}
+                <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-3 transition-transform" />
+              </Button>
+            </div>
           </div>
-          <div className="w-[50%] h-[650px] flex flex-col justify-center items-center">
-            <ImageCarousel />
+
+          {/* Carousel Section */}
+          <div className="w-full lg:w-[50%] h-[400px] md:h-[500px] lg:h-[630px] flex flex-col justify-center items-center">
+            <div className="w-[300px] md:w-[500px] lg:w-[90%]">
+              <ImageCarousel />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 export default Services;

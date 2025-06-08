@@ -255,10 +255,10 @@ export function Navbar() {
 
               {showLanguageMenu && (
                 <div className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <button onClick={() => handleLanguageSwitch("en")} className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${locale === "en" ? "bg-gray-50 font-medium" : ""}`}>
+                  <button onClick={() => handleLanguageSwitch("en")} className={`block w-full text-left px-4 py-2 text-sm rounded-md hover:bg-gray-100 ${locale === "en" ? "bg-gray-50 font-medium" : ""}`}>
                     English
                   </button>
-                  <button onClick={() => handleLanguageSwitch("ar")} className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${locale === "ar" ? "bg-gray-50 font-medium" : ""}`}>
+                  <button onClick={() => handleLanguageSwitch("ar")} className={`block w-full text-left px-4 py-2 text-sm rounded-md hover:bg-gray-100 ${locale === "ar" ? "bg-gray-50 font-medium" : ""}`}>
                     العربية
                   </button>
                 </div>

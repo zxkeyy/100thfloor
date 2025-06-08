@@ -10,7 +10,9 @@ import { Sidenav } from "@/components/Sidenav";
 export default function Page() {
   return (
     <>
-      <Sidenav />
+      <nav className="hidden md:block">
+        <Sidenav />
+      </nav>
       <section id="home">
         <Home />
       </section>
