@@ -33,7 +33,7 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <Providers>
             <Navbar />
-            {children}
+            <div className="min-h-screen ">{children}</div>
             <Footer />
           </Providers>
         </NextIntlClientProvider>

@@ -10,11 +10,17 @@ export interface EmailConfig {
 // Create email transporter
 const createTransporter = () => {
   return nodemailer.createTransport({
-    // For Gmail - you can modify for other providers
-    service: "gmail",
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || "587"),
+    secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, // Use app password for Gmail
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+    // Optional: additional SMTP options
+    tls: {
+      // Do not fail on invalid certs (for development)
+      rejectUnauthorized: process.env.NODE_ENV === "production",
     },
   });
 };
@@ -24,7 +30,7 @@ export const sendVerificationEmail = async (email: string, code: string) => {
     const transporter = createTransporter();
 
     const mailOptions: EmailConfig = {
-      from: process.env.EMAIL_FROM || process.env.EMAIL_USER || "noreply@100thfloor.com",
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || "noreply@100thfloor.com",
       to: email,
       subject: "100th Floor - Verify Your Blog Post Submission",
       html: `

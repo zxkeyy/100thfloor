@@ -4,9 +4,8 @@ import { useState } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LogIn, Eye, EyeOff } from "lucide-react";
-import Image from "next/image";
-import logoIcon from "@/public/100thlogo.png";
-import logoText from "@/public/100thlogotext.png";
+import Logo from "@/components/Logo";
+import LogoText from "@/components/LogoText";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -34,7 +33,7 @@ export default function AdminLogin() {
         // Check if session is valid
         const session = await getSession();
         if (session) {
-          router.push("/admin/dashboard");
+          router.push("/admin");
         } else {
           setError("Authentication failed");
         }
@@ -53,8 +52,8 @@ export default function AdminLogin() {
         {/* Logo and Header */}
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Image src={logoIcon} alt="100th Floor" width={48} height={48} className="h-12 w-auto" />
-            <Image src={logoText} alt="100th Floor" width={120} height={40} className="h-10 w-auto" />
+            <Logo color="#176b87" width={48} height={48} className="h-12 w-auto" />
+            <LogoText color="#176b87" width={120} height={40} className="h-10 w-auto" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h2>
           <p className="text-gray-600">Access your dashboard to manage content</p>
@@ -84,7 +83,7 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="w-full inline-flex items-center justify-center px-6 py-3 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors disabled:cursor-not-allowed disabled:opacity-50">
+            <button type="submit" disabled={loading} className="w-full cursor-pointer inline-flex items-center justify-center px-6 py-3 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors disabled:cursor-not-allowed disabled:opacity-50">
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

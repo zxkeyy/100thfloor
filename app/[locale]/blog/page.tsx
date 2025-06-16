@@ -94,7 +94,7 @@ export default function BlogPage() {
   }
 
   return (
-    <div className="mt-25 md:px-10">
+    <div className="mt-35 md:px-10">
       {/* Create Post Button */}
       {posts.length > 0 && (
         <div className="px-4 md:px-0">
