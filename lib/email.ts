@@ -160,67 +160,62 @@ export const sendAdminNotification = async (postData: { title: string; authorNam
   }
 };
 
-export const sendAdminCommentNotification = async (commentData: { content: string; postTitle: string; postSlug: string; commentId: string }) => {
+export const sendAdminCommentNotification = async (commentData: { authorName: string; content: string; postTitle: string; postSlug: string }) => {
   try {
     const transporter = createTransporter();
     const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
 
     if (!adminEmail) {
-      console.warn("No admin email configured. Skipping admin comment notification.");
+      console.warn("No admin email configured for comment notifications");
       return { success: false, error: "No admin email configured" };
     }
-
-    // Truncate comment content for email preview (first 150 characters)
-    const contentPreview = commentData.content.substring(0, 150) + (commentData.content.length > 150 ? "..." : "");
 
     const mailOptions: EmailConfig = {
       from: process.env.SMTP_FROM || process.env.SMTP_USER || "noreply@100thfloor.com",
       to: adminEmail,
-      subject: `New Comment on "${commentData.postTitle}"`,
+      subject: `New Comment on "${commentData.postTitle}" - 100th Floor Blog`,
       html: `
         <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-          <div style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
             <h1 style="color: white; margin: 0; font-size: 28px;">100th Floor</h1>
-            <p style="color: white; margin: 10px 0 0 0; opacity: 0.9;">New Comment Submission</p>
+            <p style="color: white; margin: 10px 0 0 0; opacity: 0.9;">New Comment Notification</p>
           </div>
           
           <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; border: 1px solid #e9ecef;">
-            <h2 style="color: #333; margin-top: 0;">New Comment Requires Review</h2>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 25px;">
-              A new comment has been submitted on the blog post "<strong>${commentData.postTitle}</strong>" and is awaiting your review.
-            </p>
+            <h2 style="color: #333; margin-top: 0;">New Comment Received</h2>
+            <p style="color: #666; margin-bottom: 20px;">A new comment has been submitted on your blog post:</p>
             
-            <div style="background: white; padding: 25px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #4CAF50;">
-              <div style="margin-bottom: 20px;">
-                <strong style="color: #555;">Comment:</strong>
-                <p style="color: #666; margin: 8px 0 0 0; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-                  "${contentPreview}"
-                </p>
-              </div>
-              
-              <div style="text-align: center; margin-top: 25px;">
-                <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/admin" 
-                   style="display: inline-block; background: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-right: 10px;">
-                  Review in Admin Dashboard
-                </a>
-                <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/blog/${commentData.postSlug}" 
-                   style="display: inline-block; background: #2196F3; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                  View Blog Post
-                </a>
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea;">
+              <h3 style="color: #333; margin-top: 0;">Post: ${commentData.postTitle}</h3>
+              <p style="color: #666; margin: 10px 0;"><strong>Author:</strong> ${commentData.authorName}</p>
+              <p style="color: #666; margin: 15px 0 0 0;"><strong>Comment:</strong></p>
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; border: 1px solid #e9ecef;">
+                <p style="margin: 0; color: #333; line-height: 1.5;">${commentData.content}</p>
               </div>
             </div>
             
-            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin-top: 20px;">
-              <p style="margin: 0; color: #856404; font-size: 14px;">
-                <strong>Action Required:</strong> Please review this comment in your admin dashboard to approve or reject it.
-              </p>
+            <div style="text-align: center; margin-top: 25px;">
+              <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/admin" 
+                 style="display: inline-block; background: #4CAF50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-right: 10px;">
+                Review in Admin Dashboard
+              </a>
+              <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/blog/${commentData.postSlug}" 
+                 style="display: inline-block; background: #2196F3; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                View Blog Post
+              </a>
             </div>
           </div>
           
-          <div style="text-align: center; margin-top: 20px; padding: 20px; color: #666; font-size: 12px;">
-            <p>© 2025 100th Floor. All rights reserved.</p>
-            <p style="margin: 5px 0 0 0;">This is an automated notification. Do not reply to this email.</p>
+          <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <p style="margin: 0; color: #856404; font-size: 14px;">
+              <strong>Action Required:</strong> Please review this comment in your admin dashboard to approve or reject it.
+            </p>
           </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; padding: 20px; color: #666; font-size: 12px;">
+          <p>© 2025 100th Floor. All rights reserved.</p>
+          <p style="margin: 5px 0 0 0;">This is an automated notification. Do not reply to this email.</p>
         </div>
       `,
     };
@@ -229,6 +224,83 @@ export const sendAdminCommentNotification = async (commentData: { content: strin
     return { success: true };
   } catch (error) {
     console.error("Error sending admin comment notification email:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+};
+
+export const sendNewsletterWelcomeEmail = async (email: string) => {
+  try {
+    const transporter = createTransporter();
+
+    // Generate unsubscribe token (in real implementation, get this from database)
+    const unsubscribeUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
+
+    const mailOptions: EmailConfig = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || "noreply@100thfloor.com",
+      to: email,
+      subject: "Welcome to 100th Floor Newsletter! 🏢",
+      html: `
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">100th Floor</h1>
+            <p style="color: white; margin: 10px 0 0 0; opacity: 0.9;">Welcome to Our Newsletter</p>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; border: 1px solid #e9ecef;">
+            <h2 style="color: #333; margin-top: 0;">Thank You for Subscribing! 🎉</h2>
+            <p style="color: #666; line-height: 1.6; margin-bottom: 25px;">
+              Welcome to the 100th Floor community! We're excited to have you on board. You'll now receive our latest updates about:
+            </p>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <ul style="color: #333; margin: 0; padding-left: 20px; line-height: 1.8;">
+                <li>🏗️ Latest architectural projects and innovations</li>
+                <li>🌱 Sustainable building practices and green architecture</li>
+                <li>📝 New blog posts from our experts</li>
+                <li>🎯 Industry insights and trends</li>
+                <li>📅 Upcoming events and webinars</li>
+              </ul>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6; margin: 25px 0;">
+              We promise to only send you valuable content and never spam your inbox. You can unsubscribe at any time using the link below.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}" 
+                 style="display: inline-block; background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-right: 10px;">
+                Visit Our Website
+              </a>
+              <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/blog" 
+                 style="display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                Read Our Blog
+              </a>
+            </div>
+            
+            <div style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 15px; border-radius: 5px; margin-top: 25px;">
+              <p style="margin: 0; color: #1565c0; font-size: 14px;">
+                <strong>Stay Connected:</strong> Follow us on social media for daily updates and behind-the-scenes content!
+              </p>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px; padding: 20px; color: #666; font-size: 12px;">
+            <p>© 2025 100th Floor. All rights reserved.</p>
+            <p style="margin: 5px 0;">
+              You're receiving this email because you subscribed to our newsletter.
+              <br>
+              <a href="${unsubscribeUrl}" style="color: #666; text-decoration: underline;">Unsubscribe</a> | 
+              <a href="${process.env.NEXTAUTH_URL || "http://localhost:3000"}/privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a>
+            </p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (error) {
+    console.error("Error sending newsletter welcome email:", error);
     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 };

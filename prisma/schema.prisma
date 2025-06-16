@@ -63,6 +63,17 @@ model EmailVerification {
   @@index([email, code])
 }
 
+model Newsletter {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  isActive    Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+  unsubscribedAt DateTime?
+  unsubscribeToken String @unique @default(cuid())
+  
+  @@index([email, isActive])
+}
+
 enum PostStatus {
   PENDING
   APPROVED

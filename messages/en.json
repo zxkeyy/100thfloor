@@ -67,11 +67,16 @@
   },
   "Contact": {
     "title": "Let's Stay In Touch",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "description": "Subscribe to our newsletter and get the latest updates on architectural innovations, sustainable building practices, and industry insights delivered directly to your inbox.",
     "emailPlaceholder": "Enter your email address",
     "subscribe": "Subscribe",
     "subscribed": "Subscribed!",
-    "privacyNotice": "We will never spam you. We respect your privacy."
+    "privacyNotice": "We will never spam you. We respect your privacy.",
+    "subscribing": "Subscribing...",
+    "alreadySubscribed": "You're already subscribed!",
+    "invalidEmail": "Please enter a valid email address",
+    "networkError": "Network error. Please try again.",
+    "successMessage": "Welcome! Check your email for confirmation."
   },
   "Blog": {
     "createPost": "Create your own post",

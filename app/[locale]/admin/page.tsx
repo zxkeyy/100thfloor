@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { LogOut, Filter, BarChart3, FileText, CheckCircle, XCircle, Clock, Trash2, Eye, MessageSquare } from "lucide-react";
+import { LogOut, Filter, BarChart3, FileText, CheckCircle, XCircle, Clock, Trash2, Eye, MessageSquare, Mail } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import DOMPurify from "dompurify";
 
@@ -32,19 +32,30 @@ interface Comment {
   };
 }
 
+interface NewsletterSubscription {
+  id: string;
+  email: string;
+  isActive: boolean;
+  subscribedAt: string;
+  unsubscribedAt?: string;
+}
+
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations("Admin.dashboard");
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [newsletters, setNewsletters] = useState<NewsletterSubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [commentsLoading, setCommentsLoading] = useState(true);
+  const [newslettersLoading, setNewslettersLoading] = useState(true);
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("PENDING");
   const [commentFilter, setCommentFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("PENDING");
+  const [newsletterFilter, setNewsletterFilter] = useState<"ALL" | "ACTIVE" | "INACTIVE">("ALL");
   const [previewPost, setPreviewPost] = useState<BlogPost | null>(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
+  const [activeTab, setActiveTab] = useState<"posts" | "comments" | "newsletter">("posts");
 
   useEffect(() => {
     if (status === "loading") return;
@@ -54,6 +65,7 @@ export default function AdminDashboard() {
     }
     fetchPosts();
     fetchComments();
+    fetchNewsletters();
   }, [session, status, router]);
 
   const fetchPosts = async () => {
@@ -85,6 +97,22 @@ export default function AdminDashboard() {
       console.error("Error fetching comments:", error);
     } finally {
       setCommentsLoading(false);
+    }
+  };
+
+  const fetchNewsletters = async () => {
+    try {
+      const response = await fetch("/api/admin/newsletter");
+      if (response.ok) {
+        const data = await response.json();
+        setNewsletters(data.subscriptions || []);
+      } else {
+        console.error("Failed to fetch newsletters");
+      }
+    } catch (error) {
+      console.error("Error fetching newsletters:", error);
+    } finally {
+      setNewslettersLoading(false);
     }
   };
 
@@ -181,6 +209,22 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleNewsletterDelete = async (email: string) => {
+    if (!confirm("Are you sure you want to delete this newsletter subscription?")) return;
+
+    try {
+      const response = await fetch(`/api/admin/newsletter?email=${encodeURIComponent(email)}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setNewsletters(newsletters.filter((newsletter) => newsletter.email !== email));
+      }
+    } catch (error) {
+      console.error("Error deleting newsletter subscription:", error);
     }
   };
 
@@ -302,6 +346,9 @@ export default function AdminDashboard() {
               </button>
               <button onClick={() => setActiveTab("comments")} className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "comments" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`}>
                 {t("tabs.comments")} ({comments.length})
+              </button>
+              <button onClick={() => setActiveTab("newsletter")} className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "newsletter" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`}>
+                Newsletter ({newsletters.length})
               </button>
             </nav>
           </div>
@@ -553,6 +600,77 @@ export default function AdminDashboard() {
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Newsletter Tab */}
+        {activeTab === "newsletter" && (
+          <>
+            {/* Newsletter Filter */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Newsletter Subscriptions</h2>
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                <select value={newsletterFilter} onChange={(e) => setNewsletterFilter(e.target.value as "ALL" | "ACTIVE" | "INACTIVE")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto">
+                  <option value="ALL">All Subscribers ({newsletters.length})</option>
+                  <option value="ACTIVE">Active ({newsletters.filter((n) => n.isActive).length})</option>
+                  <option value="INACTIVE">Inactive ({newsletters.filter((n) => !n.isActive).length})</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Newsletter Content */}
+            {newslettersLoading ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              </div>
+            ) : (
+              <div className="bg-white shadow rounded-lg overflow-hidden">
+                {(() => {
+                  const filteredNewsletters = newsletters.filter((newsletter) => {
+                    if (newsletterFilter === "ALL") return true;
+                    if (newsletterFilter === "ACTIVE") return newsletter.isActive;
+                    if (newsletterFilter === "INACTIVE") return !newsletter.isActive;
+                    return true;
+                  });
+
+                  if (filteredNewsletters.length === 0) {
+                    return (
+                      <div className="text-center py-8">
+                        <Mail className="mx-auto h-12 w-12 text-gray-400" />
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">No subscribers</h3>
+                        <p className="mt-1 text-sm text-gray-500">No newsletter subscriptions found.</p>
+                      </div>
+                    );
+                  }
+
+                  return filteredNewsletters.map((newsletter) => (
+                    <div key={newsletter.id} className="p-4 sm:p-6 border-b border-gray-200 last:border-b-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <h3 className="text-sm font-medium text-gray-900">{newsletter.email}</h3>
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${newsletter.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>{newsletter.isActive ? "Active" : "Inactive"}</span>
+                          </div>
+                          <div className="mt-1 text-sm text-gray-500">
+                            <span>Subscribed: {new Date(newsletter.subscribedAt).toLocaleDateString()}</span>
+                            {newsletter.unsubscribedAt && <span className="ml-4">Unsubscribed: {new Date(newsletter.unsubscribedAt).toLocaleDateString()}</span>}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          {/* Delete Button */}
+                          <button onClick={() => handleNewsletterDelete(newsletter.email)} className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors">
+                            <Trash2 className="h-3 w-3 sm:mr-1" />
+                            <span className="hidden sm:inline">Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ));
+                })()}
               </div>
             )}
           </>

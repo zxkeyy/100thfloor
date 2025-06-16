@@ -7,16 +7,54 @@ import { useTranslations } from "next-intl";
 function StayInTouch() {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const t = useTranslations("Contact");
 
-  const handleSubmit = () => {
-    console.log("Email submitted:", email);
-    if (email) {
-      setIsSubscribed(true);
-      setTimeout(() => {
-        setIsSubscribed(false);
+  const handleSubmit = async () => {
+    if (!email.trim()) {
+      setMessage("Please enter your email address");
+      setIsError(true);
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage("");
+    setIsError(false);
+
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsSubscribed(true);
+        setMessage(data.message || "Successfully subscribed!");
+        setIsError(false);
         setEmail("");
-      }, 3000);
+
+        // Reset success state after 5 seconds
+        setTimeout(() => {
+          setIsSubscribed(false);
+          setMessage("");
+        }, 5000);
+      } else {
+        setMessage(data.message || "Something went wrong. Please try again.");
+        setIsError(true);
+      }
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      setMessage("Network error. Please check your connection and try again.");
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,13 +84,20 @@ function StayInTouch() {
           {/* Email Form */}
           <div className="w-full sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto mb-6">
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-0">
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("emailPlaceholder")} className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-md sm:rounded-l-md sm:rounded-r-none bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 border-0 focus:ring-2 focus:ring-white/50 focus:outline-none transition-all duration-300" />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyPress={(e) => e.key === "Enter" && !isLoading && handleSubmit()} placeholder={t("emailPlaceholder")} disabled={isLoading} className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-md sm:rounded-l-md sm:rounded-r-none bg-white/95 backdrop-blur-sm text-gray-900 placeholder-gray-500 border-0 focus:ring-2 focus:ring-white/50 focus:outline-none transition-all duration-300 disabled:opacity-50" />
               <div className="sm:rounded-r-md sm:bg-white/95 sm:p-2">
-                <button onClick={handleSubmit} disabled={isSubscribed} className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-primary-foreground cursor-pointer hover:bg-primary text-white font-semibold rounded-md transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-white/50 focus:outline-none disabled:opacity-50 disabled:transform-none">
-                  {isSubscribed ? t("subscribed") : t("subscribe")}
+                <button onClick={handleSubmit} disabled={isLoading || isSubscribed} className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-primary-foreground cursor-pointer hover:bg-primary text-white font-semibold rounded-md transition-all duration-300 transform hover:scale-105 focus:ring-2 focus:ring-white/50 focus:outline-none disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed">
+                  {isLoading ? "Subscribing..." : isSubscribed ? t("subscribed") : t("subscribe")}
                 </button>
               </div>
             </div>
+
+            {/* Message Display */}
+            {message && (
+              <div className={`mt-4 p-3 rounded-md text-center ${isError ? "bg-red-500/20 border border-red-500/30 text-red-100" : "bg-green-500/20 border border-green-500/30 text-green-100"}`}>
+                <p className="text-sm font-medium">{message}</p>
+              </div>
+            )}
           </div>
 
           {/* Privacy Notice */}
