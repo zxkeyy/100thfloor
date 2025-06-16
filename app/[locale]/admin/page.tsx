@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { LogOut, Filter, BarChart3, FileText, CheckCircle, XCircle, Clock, Trash2, Eye, MessageSquare } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import DOMPurify from "dompurify";
@@ -34,6 +35,7 @@ interface Comment {
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const t = useTranslations("Admin.dashboard");
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +121,7 @@ export default function AdminDashboard() {
   };
 
   const handleDelete = async (postId: string) => {
-    if (!confirm("Are you sure you want to delete this post?")) return;
+    if (!confirm(t("confirmations.deletePost"))) return;
 
     try {
       const response = await fetch(`/api/admin/posts/${postId}`, {
@@ -167,7 +169,7 @@ export default function AdminDashboard() {
   };
 
   const handleCommentDelete = async (commentId: string) => {
-    if (!confirm("Are you sure you want to delete this comment?")) return;
+    if (!confirm(t("confirmations.deleteComment"))) return;
 
     try {
       const response = await fetch(`/api/admin/comments/${commentId}`, {
@@ -185,6 +187,10 @@ export default function AdminDashboard() {
   const handlePreview = (post: BlogPost) => {
     setPreviewPost(post);
     setShowPreviewModal(true);
+  };
+
+  const getTranslatedStatus = (status: BlogPost["status"] | Comment["status"]) => {
+    return t(`status.${status}`);
   };
 
   const filteredPosts = posts.filter((post) => (filter === "ALL" ? true : post.status === filter));
@@ -229,12 +235,12 @@ export default function AdminDashboard() {
   }
 
   const stats = [
-    { label: "Total Posts", value: posts.length, icon: FileText, color: "text-blue-600 bg-blue-100" },
-    { label: "Pending Posts", value: posts.filter((p) => p.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
-    { label: "Approved Posts", value: posts.filter((p) => p.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
-    { label: "Total Comments", value: comments.length, icon: MessageSquare, color: "text-purple-600 bg-purple-100" },
-    { label: "Pending Comments", value: comments.filter((c) => c.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
-    { label: "Approved Comments", value: comments.filter((c) => c.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
+    { label: t("stats.totalPosts"), value: posts.length, icon: FileText, color: "text-blue-600 bg-blue-100" },
+    { label: t("stats.pendingPosts"), value: posts.filter((p) => p.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
+    { label: t("stats.approvedPosts"), value: posts.filter((p) => p.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
+    { label: t("stats.totalComments"), value: comments.length, icon: MessageSquare, color: "text-purple-600 bg-purple-100" },
+    { label: t("stats.pendingComments"), value: comments.filter((c) => c.status === "PENDING").length, icon: Clock, color: "text-amber-600 bg-amber-100" },
+    { label: t("stats.approvedComments"), value: comments.filter((c) => c.status === "APPROVED").length, icon: CheckCircle, color: "text-green-600 bg-green-100" },
   ];
 
   return (
@@ -246,18 +252,18 @@ export default function AdminDashboard() {
             <div className="flex items-center space-x-3 sm:space-x-4">
               <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Manage blog posts and comments</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{t("title")}</h1>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">{t("subtitle")}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-900">{session.user?.email}</p>
-                <p className="text-xs text-gray-600">Administrator</p>
+                <p className="text-xs text-gray-600">{t("administrator")}</p>
               </div>
               <button onClick={() => signOut()} className="inline-flex items-center px-3 py-2 sm:px-4 bg-gray-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
                 <LogOut className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Sign Out</span>
+                <span className="hidden sm:inline">{t("signOut")}</span>
               </button>
             </div>
           </div>
@@ -291,11 +297,11 @@ export default function AdminDashboard() {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-4 sm:space-x-8">
               <button onClick={() => setActiveTab("posts")} className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "posts" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`}>
-                <span className="hidden sm:inline">Blog Posts</span>
-                <span className="sm:hidden">Posts</span> ({posts.length})
+                <span className="hidden sm:inline">{t("tabs.posts")}</span>
+                <span className="sm:hidden">{t("tabs.postsShort")}</span> ({posts.length})
               </button>
               <button onClick={() => setActiveTab("comments")} className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "comments" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`}>
-                Comments ({comments.length})
+                {t("tabs.comments")} ({comments.length})
               </button>
             </nav>
           </div>
@@ -306,14 +312,14 @@ export default function AdminDashboard() {
           <>
             {/* Posts Filter */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Blog Posts</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">{t("posts.title")}</h2>
               <div className="flex items-center space-x-2 sm:space-x-4">
                 <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                 <select value={filter} onChange={(e) => setFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto">
-                  <option value="ALL">All Posts ({posts.length})</option>
-                  <option value="PENDING">Pending ({posts.filter((p) => p.status === "PENDING").length})</option>
-                  <option value="APPROVED">Approved ({posts.filter((p) => p.status === "APPROVED").length})</option>
-                  <option value="REJECTED">Rejected ({posts.filter((p) => p.status === "REJECTED").length})</option>
+                  <option value="ALL">{t("filters.allPosts")} ({posts.length})</option>
+                  <option value="PENDING">{t("filters.pending")} ({posts.filter((p) => p.status === "PENDING").length})</option>
+                  <option value="APPROVED">{t("filters.approved")} ({posts.filter((p) => p.status === "APPROVED").length})</option>
+                  <option value="REJECTED">{t("filters.rejected")} ({posts.filter((p) => p.status === "REJECTED").length})</option>
                 </select>
               </div>
             </div>
@@ -322,8 +328,8 @@ export default function AdminDashboard() {
             {filteredPosts.length === 0 ? (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 sm:p-12 text-center">
                 <FileText className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No posts found</h3>
-                <p className="text-sm sm:text-base text-gray-600">There are no posts matching your current filter.</p>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">{t("posts.noPostsFound")}</h3>
+                <p className="text-sm sm:text-base text-gray-600">{t("posts.noPostsDescription")}</p>
               </div>
             ) : (
               <div className="space-y-4 sm:space-y-6">
@@ -354,14 +360,14 @@ export default function AdminDashboard() {
                           </div>
                           <div className="flex items-center space-x-2 sm:space-x-3 self-start">
                             <StatusIcon className={`h-4 w-4 sm:h-5 sm:w-5 ${statusConfig.iconColor}`} />
-                            <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{post.status}</span>
+                            <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{getTranslatedStatus(post.status)}</span>
                           </div>
                         </div>
 
                         {/* Post Image */}
                         {post.image && (
                           <div className="mb-4 sm:mb-6">
-                            <img src={post.image} alt="Post image" className="w-full sm:max-w-md h-32 sm:h-48 object-cover rounded-lg border border-gray-200" />
+                            <img src={post.image} alt={t("posts.postImage")} className="w-full sm:max-w-md h-32 sm:h-48 object-cover rounded-lg border border-gray-200" />
                           </div>
                         )}
 
@@ -375,18 +381,18 @@ export default function AdminDashboard() {
                           {/* Preview Button */}
                           <button onClick={() => handlePreview(post)} className="inline-flex items-center px-3 py-2 sm:px-4 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                             <Eye className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                            <span className="hidden sm:inline">Preview</span>
+                            <span className="hidden sm:inline">{t("actions.preview")}</span>
                           </button>
 
                           {post.status === "PENDING" && (
                             <>
                               <button onClick={() => handleApprove(post.id)} className="inline-flex items-center px-3 py-2 sm:px-4 bg-green-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
                                 <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                                <span className="hidden sm:inline">Approve</span>
+                                <span className="hidden sm:inline">{t("actions.approve")}</span>
                               </button>
                               <button onClick={() => handleReject(post.id)} className="inline-flex items-center px-3 py-2 sm:px-4 bg-amber-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors">
                                 <XCircle className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                                <span className="hidden sm:inline">Reject</span>
+                                <span className="hidden sm:inline">{t("actions.reject")}</span>
                               </button>
                             </>
                           )}
@@ -394,21 +400,21 @@ export default function AdminDashboard() {
                           {post.status === "REJECTED" && (
                             <button onClick={() => handleApprove(post.id)} className="inline-flex items-center px-3 py-2 sm:px-4 bg-green-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
                               <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                              <span className="hidden sm:inline">Approve</span>
+                              <span className="hidden sm:inline">{t("actions.approve")}</span>
                             </button>
                           )}
 
                           {post.status === "APPROVED" && (
                             <button onClick={() => handleReject(post.id)} className="inline-flex items-center px-3 py-2 sm:px-4 bg-amber-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors">
                               <XCircle className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                              <span className="hidden sm:inline">Reject</span>
+                              <span className="hidden sm:inline">{t("actions.reject")}</span>
                             </button>
                           )}
 
                           {/* Delete Button */}
                           <button onClick={() => handleDelete(post.id)} className="inline-flex items-center px-3 py-2 sm:px-4 bg-red-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors sm:ml-auto">
                             <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                            <span className="hidden sm:inline">Delete</span>
+                            <span className="hidden sm:inline">{t("actions.delete")}</span>
                           </button>
                         </div>
                       </div>
@@ -425,14 +431,14 @@ export default function AdminDashboard() {
           <>
             {/* Comments Filter */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Comments</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">{t("comments.title")}</h2>
               <div className="flex items-center space-x-2 sm:space-x-4">
                 <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                 <select value={commentFilter} onChange={(e) => setCommentFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto">
-                  <option value="ALL">All Comments ({comments.length})</option>
-                  <option value="PENDING">Pending ({comments.filter((c) => c.status === "PENDING").length})</option>
-                  <option value="APPROVED">Approved ({comments.filter((c) => c.status === "APPROVED").length})</option>
-                  <option value="REJECTED">Rejected ({comments.filter((c) => c.status === "REJECTED").length})</option>
+                  <option value="ALL">{t("filters.allComments")} ({comments.length})</option>
+                  <option value="PENDING">{t("filters.pending")} ({comments.filter((c) => c.status === "PENDING").length})</option>
+                  <option value="APPROVED">{t("filters.approved")} ({comments.filter((c) => c.status === "APPROVED").length})</option>
+                  <option value="REJECTED">{t("filters.rejected")} ({comments.filter((c) => c.status === "REJECTED").length})</option>
                 </select>
               </div>
             </div>
@@ -445,8 +451,8 @@ export default function AdminDashboard() {
             ) : filteredComments.length === 0 ? (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 sm:p-12 text-center">
                 <MessageSquare className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No comments found</h3>
-                <p className="text-sm sm:text-base text-gray-600">There are no comments matching your current filter.</p>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">{t("comments.noCommentsFound")}</h3>
+                <p className="text-sm sm:text-base text-gray-600">{t("comments.noCommentsDescription")}</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -462,7 +468,7 @@ export default function AdminDashboard() {
                           <div className="flex-1">
                             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 mb-2">
                               <h3 className="text-sm font-medium text-gray-900">
-                                Comment on: <span className="text-primary break-words">{comment.blogPost.title}</span>
+                                {t("comments.commentOn")} <span className="text-primary break-words">{comment.blogPost.title}</span>
                               </h3>
                             </div>
                             <div className="text-xs text-gray-500">
@@ -477,7 +483,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="flex items-center space-x-2 sm:space-x-3 self-start">
                             <StatusIcon className={`h-4 w-4 sm:h-5 sm:w-5 ${statusConfig.iconColor}`} />
-                            <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{comment.status}</span>
+                            <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-semibold ${statusConfig.badge}`}>{getTranslatedStatus(comment.status)}</span>
                           </div>
                         </div>
 
@@ -492,11 +498,11 @@ export default function AdminDashboard() {
                             <>
                               <button onClick={() => handleCommentApprove(comment.id)} className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors">
                                 <CheckCircle className="h-3 w-3 sm:mr-1" />
-                                <span className="hidden sm:inline">Approve</span>
+                                <span className="hidden sm:inline">{t("actions.approve")}</span>
                               </button>
                               <button onClick={() => handleCommentReject(comment.id)} className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors">
                                 <XCircle className="h-3 w-3 sm:mr-1" />
-                                <span className="hidden sm:inline">Reject</span>
+                                <span className="hidden sm:inline">{t("actions.reject")}</span>
                               </button>
                             </>
                           )}
@@ -504,27 +510,27 @@ export default function AdminDashboard() {
                           {comment.status === "REJECTED" && (
                             <button onClick={() => handleCommentApprove(comment.id)} className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition-colors">
                               <CheckCircle className="h-3 w-3 sm:mr-1" />
-                              <span className="hidden sm:inline">Approve</span>
+                              <span className="hidden sm:inline">{t("actions.approve")}</span>
                             </button>
                           )}
 
                           {comment.status === "APPROVED" && (
                             <button onClick={() => handleCommentReject(comment.id)} className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-amber-600 text-white text-xs font-medium rounded hover:bg-amber-700 transition-colors">
                               <XCircle className="h-3 w-3 sm:mr-1" />
-                              <span className="hidden sm:inline">Reject</span>
+                              <span className="hidden sm:inline">{t("actions.reject")}</span>
                             </button>
                           )}
 
                           {/* View Post Button */}
                           <a href={`/blog/${comment.blogPost.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors">
                             <Eye className="h-3 w-3 sm:mr-1" />
-                            <span className="hidden sm:inline">View Post</span>
+                            <span className="hidden sm:inline">{t("actions.viewPost")}</span>
                           </a>
 
                           {/* Delete Button */}
                           <button onClick={() => handleCommentDelete(comment.id)} className="inline-flex items-center px-2 py-1.5 sm:px-3 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors sm:ml-auto">
                             <Trash2 className="h-3 w-3 sm:mr-1" />
-                            <span className="hidden sm:inline">Delete</span>
+                            <span className="hidden sm:inline">{t("actions.delete")}</span>
                           </button>
                         </div>
                       </div>
@@ -541,7 +547,7 @@ export default function AdminDashboard() {
       <Dialog open={showPreviewModal} onOpenChange={setShowPreviewModal}>
         <DialogContent className="max-w-xs sm:max-w-3xl lg:max-w-5xl max-h-[90vh] bg-white p-4 sm:p-6 lg:p-10 rounded-lg shadow-lg overflow-hidden flex flex-col mx-4 sm:mx-auto">
           <DialogHeader>
-            <DialogTitle className="text-base sm:text-lg font-semibold text-gray-900">Blog Post Preview</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg font-semibold text-gray-900">{t("preview.title")}</DialogTitle>
           </DialogHeader>
 
           {/* Modal Content - Styled exactly like the real blog post page */}
@@ -554,7 +560,7 @@ export default function AdminDashboard() {
 
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-[5px] text-[#666] text-[0.85rem] sm:text-[0.95rem] mb-[20px] sm:mb-[30px]">
                     <span>
-                      By<span className="font-bold"> {previewPost.authorName}</span>
+                      {t("preview.by")}<span className="font-bold"> {previewPost.authorName}</span>
                     </span>
                     <span className="hidden sm:inline">•</span>
                     <time>
@@ -565,7 +571,7 @@ export default function AdminDashboard() {
                       })}
                     </time>
                     <span className="hidden sm:inline">•</span>
-                    <span>{Math.ceil(previewPost.content.split(" ").length / 200)} min read</span>
+                    <span>{Math.ceil(previewPost.content.split(" ").length / 200)} {t("preview.minRead")}</span>
                   </div>
 
                   {previewPost.image && (
@@ -587,10 +593,10 @@ export default function AdminDashboard() {
               {previewPost && (
                 <>
                   <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-semibold ${getStatusConfig(previewPost.status).badge}`}>{previewPost.status}</span>
+                    <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-semibold ${getStatusConfig(previewPost.status).badge}`}>{getTranslatedStatus(previewPost.status)}</span>
                   </div>
                   <button onClick={() => setShowPreviewModal(false)} className="w-full sm:w-auto px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm">
-                    Close
+                    {t("actions.close")}
                   </button>
                 </>
               )}

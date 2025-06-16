@@ -181,5 +181,81 @@
       "support": "Support"
     },
     "copyright": "Copyright © 2024 Arockt. All rights reserved."
+  },
+  "Admin": {
+    "login": {
+      "title": "Admin Login",
+      "subtitle": "Access your dashboard to manage content",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "loginButton": "Login to Dashboard",
+      "loggingIn": "Logging in...",
+      "invalidCredentials": "Invalid credentials",
+      "authFailed": "Authentication failed",
+      "loginError": "An error occurred during login",
+      "footer": "© 2025 100th Floor. All rights reserved."
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "Manage blog posts and comments",
+      "administrator": "Administrator",
+      "signOut": "Sign Out",
+      "stats": {
+        "totalPosts": "Total Posts",
+        "pendingPosts": "Pending Posts",
+        "approvedPosts": "Approved Posts",
+        "totalComments": "Total Comments",
+        "pendingComments": "Pending Comments",
+        "approvedComments": "Approved Comments"
+      },
+      "tabs": {
+        "posts": "Blog Posts",
+        "postsShort": "Posts",
+        "comments": "Comments"
+      },
+      "filters": {
+        "allPosts": "All Posts",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "allComments": "All Comments"
+      },
+      "posts": {
+        "title": "Blog Posts",
+        "noPostsFound": "No posts found",
+        "noPostsDescription": "There are no posts matching your current filter.",
+        "postImage": "Post image"
+      },
+      "comments": {
+        "title": "Comments",
+        "noCommentsFound": "No comments found",
+        "noCommentsDescription": "There are no comments matching your current filter.",
+        "commentOn": "Comment on:"
+      },
+      "actions": {
+        "preview": "Preview",
+        "approve": "Approve",
+        "reject": "Reject",
+        "delete": "Delete",
+        "viewPost": "View Post",
+        "close": "Close"
+      },
+      "confirmations": {
+        "deletePost": "Are you sure you want to delete this post?",
+        "deleteComment": "Are you sure you want to delete this comment?"
+      },
+      "preview": {
+        "title": "Blog Post Preview",
+        "by": "By",
+        "minRead": "min read"
+      },
+      "status": {
+        "PENDING": "PENDING",
+        "APPROVED": "APPROVED", 
+        "REJECTED": "REJECTED"
+      }
+    }
   }
 }

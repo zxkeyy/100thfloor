@@ -181,5 +181,81 @@
       "support": "الدعم"
     },
     "copyright": "حقوق الطبع والنشر © 2024 أروكت. جميع الحقوق محفوظة."
+  },
+  "Admin": {
+    "login": {
+      "title": "تسجيل دخول المدير",
+      "subtitle": "ادخل إلى لوحة التحكم لإدارة المحتوى",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "loginButton": "تسجيل الدخول إلى لوحة التحكم",
+      "loggingIn": "جاري تسجيل الدخول...",
+      "invalidCredentials": "بيانات اعتماد غير صحيحة",
+      "authFailed": "فشل في المصادقة",
+      "loginError": "حدث خطأ أثناء تسجيل الدخول",
+      "footer": "© 2025 الطابق المائة. جميع الحقوق محفوظة."
+    },
+    "dashboard": {
+      "title": "لوحة تحكم المدير",
+      "subtitle": "إدارة مقالات المدونة والتعليقات",
+      "administrator": "مدير",
+      "signOut": "تسجيل الخروج",
+      "stats": {
+        "totalPosts": "إجمالي المقالات",
+        "pendingPosts": "المقالات المعلقة",
+        "approvedPosts": "المقالات المعتمدة",
+        "totalComments": "إجمالي التعليقات",
+        "pendingComments": "التعليقات المعلقة",
+        "approvedComments": "التعليقات المعتمدة"
+      },
+      "tabs": {
+        "posts": "مقالات المدونة",
+        "postsShort": "المقالات",
+        "comments": "التعليقات"
+      },
+      "filters": {
+        "allPosts": "جميع المقالات",
+        "pending": "معلق",
+        "approved": "معتمد",
+        "rejected": "مرفوض",
+        "allComments": "جميع التعليقات"
+      },
+      "posts": {
+        "title": "مقالات المدونة",
+        "noPostsFound": "لم يتم العثور على مقالات",
+        "noPostsDescription": "لا توجد مقالات تطابق المرشح الحالي.",
+        "postImage": "صورة المقال"
+      },
+      "comments": {
+        "title": "التعليقات",
+        "noCommentsFound": "لم يتم العثور على تعليقات",
+        "noCommentsDescription": "لا توجد تعليقات تطابق المرشح الحالي.",
+        "commentOn": "تعليق على:"
+      },
+      "actions": {
+        "preview": "معاينة",
+        "approve": "اعتماد",
+        "reject": "رفض",
+        "delete": "حذف",
+        "viewPost": "عرض المقال",
+        "close": "إغلاق"
+      },
+      "confirmations": {
+        "deletePost": "هل أنت متأكد من أنك تريد حذف هذا المقال؟",
+        "deleteComment": "هل أنت متأكد من أنك تريد حذف هذا التعليق؟"
+      },
+      "preview": {
+        "title": "معاينة مقال المدونة",
+        "by": "بواسطة",
+        "minRead": "دقيقة"
+      },
+      "status": {
+        "PENDING": "معلق",
+        "APPROVED": "معتمد",
+        "REJECTED": "مرفوض"
+      }
+    }
   }
 }
