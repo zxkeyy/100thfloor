@@ -253,7 +253,7 @@
       },
       "status": {
         "PENDING": "PENDING",
-        "APPROVED": "APPROVED", 
+        "APPROVED": "APPROVED",
         "REJECTED": "REJECTED"
       }
     }

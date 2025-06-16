@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@/lib/generated/prisma";
+import { sendAdminCommentNotification } from "@/lib/email";
 
 const prisma = new PrismaClient();
 
@@ -61,6 +62,19 @@ export async function POST(request: Request, { params }: { params: Promise<{ pos
         status: "PENDING", // Comments require approval
       },
     });
+
+    // Send admin notification email for new comment
+    const adminNotificationResult = await sendAdminCommentNotification({
+      content: content.trim(),
+      postTitle: blogPost.title,
+      postSlug: blogPost.slug,
+      commentId: comment.id,
+    });
+
+    if (!adminNotificationResult.success) {
+      console.warn("Failed to send admin comment notification email:", adminNotificationResult.error);
+      // Don't fail the request if admin notification fails
+    }
 
     return NextResponse.json({
       message: "Comment submitted successfully! It will appear after approval.",

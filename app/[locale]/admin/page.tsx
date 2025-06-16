@@ -316,10 +316,18 @@ export default function AdminDashboard() {
               <div className="flex items-center space-x-2 sm:space-x-4">
                 <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                 <select value={filter} onChange={(e) => setFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto">
-                  <option value="ALL">{t("filters.allPosts")} ({posts.length})</option>
-                  <option value="PENDING">{t("filters.pending")} ({posts.filter((p) => p.status === "PENDING").length})</option>
-                  <option value="APPROVED">{t("filters.approved")} ({posts.filter((p) => p.status === "APPROVED").length})</option>
-                  <option value="REJECTED">{t("filters.rejected")} ({posts.filter((p) => p.status === "REJECTED").length})</option>
+                  <option value="ALL">
+                    {t("filters.allPosts")} ({posts.length})
+                  </option>
+                  <option value="PENDING">
+                    {t("filters.pending")} ({posts.filter((p) => p.status === "PENDING").length})
+                  </option>
+                  <option value="APPROVED">
+                    {t("filters.approved")} ({posts.filter((p) => p.status === "APPROVED").length})
+                  </option>
+                  <option value="REJECTED">
+                    {t("filters.rejected")} ({posts.filter((p) => p.status === "REJECTED").length})
+                  </option>
                 </select>
               </div>
             </div>
@@ -435,10 +443,18 @@ export default function AdminDashboard() {
               <div className="flex items-center space-x-2 sm:space-x-4">
                 <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                 <select value={commentFilter} onChange={(e) => setCommentFilter(e.target.value as "ALL" | "PENDING" | "APPROVED" | "REJECTED")} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-auto">
-                  <option value="ALL">{t("filters.allComments")} ({comments.length})</option>
-                  <option value="PENDING">{t("filters.pending")} ({comments.filter((c) => c.status === "PENDING").length})</option>
-                  <option value="APPROVED">{t("filters.approved")} ({comments.filter((c) => c.status === "APPROVED").length})</option>
-                  <option value="REJECTED">{t("filters.rejected")} ({comments.filter((c) => c.status === "REJECTED").length})</option>
+                  <option value="ALL">
+                    {t("filters.allComments")} ({comments.length})
+                  </option>
+                  <option value="PENDING">
+                    {t("filters.pending")} ({comments.filter((c) => c.status === "PENDING").length})
+                  </option>
+                  <option value="APPROVED">
+                    {t("filters.approved")} ({comments.filter((c) => c.status === "APPROVED").length})
+                  </option>
+                  <option value="REJECTED">
+                    {t("filters.rejected")} ({comments.filter((c) => c.status === "REJECTED").length})
+                  </option>
                 </select>
               </div>
             </div>
@@ -560,7 +576,8 @@ export default function AdminDashboard() {
 
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-[5px] text-[#666] text-[0.85rem] sm:text-[0.95rem] mb-[20px] sm:mb-[30px]">
                     <span>
-                      {t("preview.by")}<span className="font-bold"> {previewPost.authorName}</span>
+                      {t("preview.by")}
+                      <span className="font-bold"> {previewPost.authorName}</span>
                     </span>
                     <span className="hidden sm:inline">•</span>
                     <time>
@@ -571,7 +588,9 @@ export default function AdminDashboard() {
                       })}
                     </time>
                     <span className="hidden sm:inline">•</span>
-                    <span>{Math.ceil(previewPost.content.split(" ").length / 200)} {t("preview.minRead")}</span>
+                    <span>
+                      {Math.ceil(previewPost.content.split(" ").length / 200)} {t("preview.minRead")}
+                    </span>
                   </div>
 
                   {previewPost.image && (

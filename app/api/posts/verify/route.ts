@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@/lib/generated/prisma";
+import { sendAdminNotification } from "@/lib/email";
 
 const prisma = new PrismaClient();
 
@@ -72,6 +73,21 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    // Send admin notification email
+    const adminNotificationResult = await sendAdminNotification({
+      title: postData.title,
+      authorName: postData.authorName,
+      authorEmail: postData.authorEmail,
+      authorPhoneNumber: postData.authorPhoneNumber,
+      content: postData.content,
+      postId: blogPost.id,
+    });
+
+    if (!adminNotificationResult.success) {
+      console.warn("Failed to send admin notification email:", adminNotificationResult.error);
+      // Don't fail the request if admin notification fails
+    }
 
     return NextResponse.json({
       message: "Email verified successfully! Your blog post has been submitted for review.",
