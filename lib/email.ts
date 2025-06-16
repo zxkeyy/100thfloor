@@ -160,7 +160,13 @@ export const sendAdminNotification = async (postData: { title: string; authorNam
   }
 };
 
-export const sendAdminCommentNotification = async (commentData: { authorName: string; content: string; postTitle: string; postSlug: string }) => {
+export const sendAdminCommentNotification = async (commentData: { 
+  authorName?: string; 
+  content: string; 
+  postTitle: string; 
+  postSlug: string; 
+  commentId: string; 
+}) => {
   try {
     const transporter = createTransporter();
     const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
@@ -187,7 +193,8 @@ export const sendAdminCommentNotification = async (commentData: { authorName: st
             
             <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea;">
               <h3 style="color: #333; margin-top: 0;">Post: ${commentData.postTitle}</h3>
-              <p style="color: #666; margin: 10px 0;"><strong>Author:</strong> ${commentData.authorName}</p>
+              ${commentData.authorName ? `<p style="color: #666; margin: 10px 0;"><strong>Author:</strong> ${commentData.authorName}</p>` : ''}
+              <p style="color: #666; margin: 10px 0;"><strong>Comment ID:</strong> ${commentData.commentId}</p>
               <p style="color: #666; margin: 15px 0 0 0;"><strong>Comment:</strong></p>
               <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; border: 1px solid #e9ecef;">
                 <p style="margin: 0; color: #333; line-height: 1.5;">${commentData.content}</p>
