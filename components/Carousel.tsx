@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Play } from "lucide-react";
 import Image from "next/image";
 import image1 from "@/public/Rectangle 6.png";
 import image2 from "@/public/Rectangle 7.png";
@@ -17,18 +17,21 @@ export default function ImageCarousel() {
       title: t("interiorDesign"),
       image: image1,
       description: t("interiorDesignDesc"),
+      features: [t("interiorDesignFeatures.feature1"), t("interiorDesignFeatures.feature2"), t("interiorDesignFeatures.feature3"), t("interiorDesignFeatures.feature4")],
     },
     {
       id: 2,
       title: t("construction"),
       image: image2,
       description: t("constructionDesc"),
+      features: [t("constructionFeatures.feature1"), t("constructionFeatures.feature2"), t("constructionFeatures.feature3"), t("constructionFeatures.feature4")],
     },
     {
       id: 3,
       title: t("planning"),
       image: image3,
       description: t("planningDesc"),
+      features: [t("planningFeatures.feature1"), t("planningFeatures.feature2"), t("planningFeatures.feature3"), t("planningFeatures.feature4")],
     },
   ];
 
@@ -72,8 +75,14 @@ export default function ImageCarousel() {
                 <div className={`absolute inset-0 transition-colors duration-500 ${overlay}`} />
 
                 {/* Title overlay */}
-                <div className="absolute bottom-0 left-0 right-0  p-6">
-                  <h3 className="text-white text-xl font-bold">{slide.title}</h3>
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 lg:p-6 m-2 md:m-3 bg-black/5 backdrop-blur-xs">
+                  <h3 className="text-white text-lg md:text-xl font-bold mb-1 md:mb-2">{slide.title}</h3>
+                  {slide.features.map((feature, featureIndex) => (
+                    <p key={featureIndex} className="text-white text-xs md:text-sm lg:text-md mt-1 md:mt-2 gap-1 md:gap-2 flex items-start md:items-center leading-tight">
+                      <Play fill="currentColor" size={14} className="md:w-5 md:h-5 flex-shrink-0 mt-0.5 md:mt-0" />
+                      <span className="break-words">{feature}</span>
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>

@@ -48,7 +48,25 @@
       "construction": "Construction",
       "constructionDesc": "Professional construction services",
       "planning": "Planning",
-      "planningDesc": "Strategic project planning"
+      "planningDesc": "Strategic project planning",
+      "interiorDesignFeatures": {
+        "feature1": "Interior and exterior design",
+        "feature2": "Implementation of suspended ceilings and gypsum",
+        "feature3": "Flooring wallpaper, and decorative lighting installation",
+        "feature4": "Furnishing and accessories"
+      },
+      "constructionFeatures": {
+        "feature1": "Structural engineering and foundation work",
+        "feature2": "Commercial and residential construction",
+        "feature3": "Project management and quality control",
+        "feature4": "Renovation and restoration services"
+      },
+      "planningFeatures": {
+        "feature1": "Architectural design and blueprints",
+        "feature2": "Building permits and regulatory compliance",
+        "feature3": "Site analysis and feasibility studies",
+        "feature4": "Timeline scheduling and budget planning"
+      }
     }
   },
   "Portfolio": {
