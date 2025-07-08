@@ -15,6 +15,13 @@ function About() {
   const locale = useLocale();
   const isArabic = locale === "ar";
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-15 lg:px-0">
       {/* NavBar Spacer */}
@@ -119,7 +126,7 @@ function About() {
               </div>
 
               <div className="mt-6 xl:mt-8 pt-4">
-                <Button className="w-full h-10 xl:h-12 text-sm xl:text-lg bg-transparent border border-primary text-primary cursor-pointer hover:bg-primary hover:text-slate-800 py-3 px-4 xl:px-6 rounded transition-all duration-300 flex items-center justify-center space-x-2 font-medium group">
+                <Button onClick={() => scrollToSection("footer")} className="w-full h-10 xl:h-12 text-sm xl:text-lg bg-transparent border border-primary text-primary cursor-pointer hover:bg-primary hover:text-slate-800 py-3 px-4 xl:px-6 rounded transition-all duration-300 flex items-center justify-center space-x-2 font-medium group">
                   {t("contactUs")}
                   <ArrowRight className="ml-2 w-4 h-4 xl:w-5 xl:h-5 group-hover:translate-x-3 transition-transform" />
                 </Button>

@@ -11,6 +11,13 @@ function Home() {
   const locale = useLocale();
   const isArabic = locale === "ar";
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen items-center relative overflow-x-hidden text-white flex flex-col">
       {/* House Background Image - Responsive */}
@@ -99,7 +106,7 @@ function Home() {
             <p className="text-white text-base md:text-lg leading-relaxed max-w-lg mb-6 md:mb-8">{t("description")}</p>
 
             {/* CTA Button - Responsive */}
-            <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 text-lg md:text-xl font-medium rounded-sm group transition-all duration-300">
+            <Button onClick={() => scrollToSection("footer")} className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 text-lg md:text-xl font-medium rounded-sm group transition-all duration-300">
               {t("contactUs")}
               <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-3 transition-transform" />
             </Button>

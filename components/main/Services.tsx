@@ -11,6 +11,13 @@ function Services() {
   const locale = useLocale();
   const isArabic = locale === "ar";
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4  mt-20 lg:mt-0">
       {/* NavBar Spacer */}
@@ -42,7 +49,7 @@ function Services() {
 
             {/* CTA Button */}
             <div className="flex justify-center lg:justify-start">
-              <Button className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 text-lg md:text-xl font-medium rounded-sm group transition-all duration-300">
+              <Button onClick={() => scrollToSection("footer")} className="bg-primary cursor-pointer hover:bg-primary-foreground text-white h-auto w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 text-lg md:text-xl font-medium rounded-sm group transition-all duration-300">
                 {t("cta")}
                 <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-3 transition-transform" />
               </Button>

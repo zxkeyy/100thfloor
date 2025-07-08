@@ -18,9 +18,9 @@
   "About": {
     "title": "About",
     "titleHighlight": "Us",
-    "description1": "Welcome to 100 flour, where the future of architecture intertwines with sustainability to create transformative spaces. Founded with a vision to revolutionize the architectural landscape.",
+    "description1": "The 100th floor company is a specialized establishment in general contracting, interior and exterior design, and the execution of decorative works. The company also provides comprehensive maintenance and cleaning services for buildings and public facilities. It was founded in [2025] in [Jeddah], aiming to deliver integrated, high-quality solutions that meet clients' needs across residential, commercial, and governmental sectors.",
     "description2": "Our mission is simple: to design spaces that inspire, function, and endure. We strive to meet the needs of today without compromising the ability of future generations to meet their own needs. Our goal is to create buildings that not only stand the test of time but also contribute positively to their surroundings.",
-    "description3": "At Arockt, we are constantly exploring new horizons in architecture and sustainability. We invite you to join us as we continue to design not just buildings, but better futures. Whether you are a potential client, a future team member, or someone interested in sustainable architecture, connect with us and be a part of our journey to make the world a better place through thoughtful and innovative design.",
+    "description3": "We aspire to be a leading company in contracting, maintenance, and interior design across the Kingdom and the region, driven by innovation, quality, and unwavering commitment",
     "conclusion": "Together, let's build the future.",
     "contactUs": "Contact Us",
     "exploreTitle": "Explore Our Modern",
@@ -40,32 +40,38 @@
     "title": "Architectural",
     "titleHighlight": "Elegance Meets",
     "titleContinue": "Innovations",
-    "description": "At Arockt, where each project embodies our commitment to innovation, sustainability, and architectural excellence. Dive into our diverse portfolio, showcasing a blend of aesthetics, functionality, and environmentally conscious design across various domains.",
+    "description": "We deliver comprehensive and reliable services in contracting, design, maintenance, and cleaning, with a strong commitment to client satisfaction and adherence to the highest standards of quality and safety across all our projects.",
     "cta": "Book Our Services",
     "carousel": {
-      "interiorDesign": "Interior Design",
+      "interiorDesign": "Design and Execution of Decoration Works",
       "interiorDesignDesc": "Modern architectural interior spaces",
-      "construction": "Construction",
+      "construction": "Cleaning of Buildings and Public Facilities",
       "constructionDesc": "Professional construction services",
-      "planning": "Planning",
+      "planning": "General Contracting",
       "planningDesc": "Strategic project planning",
+      "slide4": "Building and Facility Maintenance",
       "interiorDesignFeatures": {
-        "feature1": "Interior and exterior design",
-        "feature2": "Implementation of suspended ceilings and gypsum",
-        "feature3": "Flooring wallpaper, and decorative lighting installation",
-        "feature4": "Furnishing and accessories"
+        "feature1": "Furnishing and accessories",
+        "feature2": "Flooring, wallpaper, and decorative lighting installation",
+        "feature3": "Implementation of suspended ceilings and gypsum",
+        "feature4": "Interior and exterior design"
       },
       "constructionFeatures": {
-        "feature1": "Structural engineering and foundation work",
-        "feature2": "Commercial and residential construction",
-        "feature3": "Project management and quality control",
-        "feature4": "Renovation and restoration services"
+        "feature1": "Disinfection and sterilization services",
+        "feature2": "Cleaning of factories, schools, and hospitals",
+        "feature3": "Cleaning of residential and commercial buildings",
+        "feature4": ""
       },
       "planningFeatures": {
-        "feature1": "Architectural design and blueprints",
-        "feature2": "Building permits and regulatory compliance",
-        "feature3": "Site analysis and feasibility studies",
-        "feature4": "Timeline scheduling and budget planning"
+        "feature1": "Engineering supervision and project management",
+        "feature2": "Execution of governmental projects and infrastructure",
+        "feature3": "Construction of villas, residential and commercial buildings",
+        "feature4": ""
+      },
+      "slide4Features": {
+        "feature1": "Garden and irrigation system maintenance",
+        "feature2": "Electrical, plumbing, and air conditioning",
+        "feature3": "Periodic and structural maintenance"
       }
     }
   },
@@ -203,7 +209,7 @@
       "careers": "Careers",
       "support": "Support"
     },
-    "copyright": "Copyright © 2024 Arockt. All rights reserved."
+    "copyright": "Copyright © 2024 100th Floor. All rights reserved."
   },
   "Admin": {
     "login": {

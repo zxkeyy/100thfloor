@@ -5,6 +5,7 @@ import Image from "next/image";
 import image1 from "@/public/Rectangle 6.png";
 import image2 from "@/public/Rectangle 7.png";
 import image3 from "@/public/Rectangle 8.png";
+import image4 from "@/public/Rectangle3.png";
 import { useTranslations } from "next-intl";
 
 export default function ImageCarousel() {
@@ -24,14 +25,20 @@ export default function ImageCarousel() {
       title: t("construction"),
       image: image2,
       description: t("constructionDesc"),
-      features: [t("constructionFeatures.feature1"), t("constructionFeatures.feature2"), t("constructionFeatures.feature3"), t("constructionFeatures.feature4")],
+      features: [t("constructionFeatures.feature1"), t("constructionFeatures.feature2"), t("constructionFeatures.feature3")],
     },
     {
       id: 3,
       title: t("planning"),
       image: image3,
       description: t("planningDesc"),
-      features: [t("planningFeatures.feature1"), t("planningFeatures.feature2"), t("planningFeatures.feature3"), t("planningFeatures.feature4")],
+      features: [t("planningFeatures.feature1"), t("planningFeatures.feature2"), t("planningFeatures.feature3")],
+    },
+    {
+      id: 4,
+      title: t("slide4"),
+      image: image4,
+      features: [t("slide4Features.feature1"), t("slide4Features.feature2"), t("slide4Features.feature3")],
     },
   ];
 
@@ -40,7 +47,7 @@ export default function ImageCarousel() {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-hidden">
       {/* Main carousel container */}
       <div className="relative h-[323px] md:h-[400px] lg:h-[623px]">
         {slides.map((slide, index) => {
@@ -48,26 +55,36 @@ export default function ImageCarousel() {
           let zIndex = "z-0";
           let scale = "scale-75";
           let overlay = "bg-white/60"; // default overlay for inactive slides
+          let opacity = "opacity-0";
 
           if (index === currentIndex) {
             position = "translate-x-0";
             zIndex = "z-30";
             scale = "scale-100";
             overlay = "bg-transparent"; // no overlay for active slide
+            opacity = "opacity-100";
           } else if (index === (currentIndex + 1) % slides.length) {
-            position = "translate-x-4/20";
+            position = "translate-x-1/4";
             zIndex = "z-20";
-            scale = "scale-85";
-            overlay = "bg-white/50"; // lighter overlay for next slide
+            scale = "scale-90";
+            overlay = "bg-white/40"; // lighter overlay for next slide
+            opacity = "opacity-80";
           } else if (index === (currentIndex + 2) % slides.length) {
-            position = "translate-x-7/20";
+            position = "translate-x-1/2";
             zIndex = "z-10";
             scale = "scale-75";
-            overlay = "bg-white/50";
+            overlay = "bg-white/60";
+            opacity = "opacity-60";
+          } else {
+            position = "translate-x-full";
+            zIndex = "z-0";
+            scale = "scale-75";
+            overlay = "bg-white/80";
+            opacity = "opacity-0";
           }
 
           return (
-            <div key={slide.id} className={`w-[80%] absolute inset-0 transition-all duration-500 ease-in-out transform ${position} ${zIndex} ${scale}`}>
+            <div key={slide.id} className={`w-[80%] absolute inset-0 transition-all duration-500 ease-in-out transform ${position} ${zIndex} ${scale} ${opacity}`}>
               <div className="relative w-[226px] md:w-[280px] lg:w-[437px] h-[323px] md:h-[400px] lg:h-[623px] overflow-hidden shadow-[0_0_40px_0_rgba(44,151,234,0.1)]">
                 <Image src={slide.image} alt={slide.title} fill className="object-cover" priority={index === currentIndex} />
 

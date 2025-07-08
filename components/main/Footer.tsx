@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Twitter } from "lucide-react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 import Image from "next/image";
 import logoIcon from "@/public/100thlogo.png";
 import logoText from "@/public/100thlogotext.png";
@@ -77,9 +77,13 @@ function Footer() {
               <a href="#" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors">
                 <Twitter size={18} className="md:w-5 md:h-5" />
               </a>
-              <a href="#" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
-                <span className="text-white font-bold text-sm md:text-lg">G+</span>
+              <a href="#" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors">
+                <Instagram size={18} className="md:w-5 md:h-5" />
               </a>
+            </div>
+            <div className="flex flex-col items-center mt-6">
+              <span className="">(+966) 596824505</span>
+              <span className="">(+966) 597555556</span>
             </div>
           </div>
 
@@ -124,9 +128,13 @@ function Footer() {
                 <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors">
                   <Twitter size={20} />
                 </a>
-                <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
-                  <span className="text-white font-bold text-lg">G+</span>
+                <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors">
+                  <Instagram size={20} />
                 </a>
+              </div>
+              <div className="flex flex-col mt-6">
+                <span className="">(+966) 596824505</span>
+                <span className="">(+966) 597555556</span>
               </div>
             </div>
 
