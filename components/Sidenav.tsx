@@ -41,9 +41,9 @@ export function Sidenav() {
       <div onClick={() => scrollToSection("services")} className={`${activeSection === "services" ? "text-primary" : "text-white/80"} text-lg font-light cursor-pointer hover:text-white transition-colors`}>
         03
       </div>
-      <div onClick={() => scrollToSection("portfolio")} className={`${activeSection === "portfolio" ? "text-primary" : "text-white/80"} text-lg font-light cursor-pointer hover:text-white transition-colors`}>
+      {/* <div onClick={() => scrollToSection("portfolio")} className={`${activeSection === "portfolio" ? "text-primary" : "text-white/80"} text-lg font-light cursor-pointer hover:text-white transition-colors`}>
         04
-      </div>
+      </div> */}
     </div>
   );
 }

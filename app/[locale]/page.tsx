@@ -2,7 +2,7 @@
 import { Fade } from "@/components/Fade";
 import About from "@/components/main/About";
 import Home from "@/components/main/Home";
-import Portfolio from "@/components/main/Portfolio";
+// import Portfolio from "@/components/main/Portfolio";
 import Services from "@/components/main/Services";
 import StayInTouch from "@/components/main/StayInTouch";
 import { Sidenav } from "@/components/Sidenav";
@@ -23,9 +23,9 @@ export default function Page() {
       <section id="services">
         <Services />
       </section>
-      <section id="portfolio">
+      {/* <section id="portfolio">
         <Portfolio />
-      </section>
+      </section> */}
       <section id="contact">
         <StayInTouch />
       </section>

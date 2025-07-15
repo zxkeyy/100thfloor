@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CirclePlay } from "lucide-react";
@@ -61,7 +62,7 @@ function About() {
           </div>
 
           {/* Main House with Video - Mobile */}
-          <div className="relative">
+          {/* <div className="relative">
             <div className="relative aspect-[4/3] w-full">
               <Image src={house1 || "/placeholder.svg"} alt="House 1" fill className="object-cover rounded-lg" />
               <div className="absolute inset-0 bg-[#176B8799] rounded-lg" style={{ mixBlendMode: "normal" }} />
@@ -77,21 +78,21 @@ function About() {
                   </div>
                 </DialogContent>
               </Dialog>
-            </div>
+            </div> */}
 
-            {/* Property Label - Mobile */}
-            <div className="mt-4 text-center">
+          {/* Property Label - Mobile */}
+          {/* <div className="mt-4 text-center">
               <h3 className="text-primary text-lg font-bold">{t("properties.serenityManor")}</h3>
               <p className="text-gray-500 text-sm">{t("properties.serenityManorAddress")}</p>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Desktop Layout */}
         <div className="hidden lg:flex">
           {/* Left Column - 32% */}
           <div className="w-[32%] flex flex-col justify-center gap-4">
-            <div className="flex justify-end items-end h-[45%]">
+            {/* <div className="flex justify-end items-end h-[45%]">
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-primary text-sm font-bold ${isArabic ? "" : "tracking-[0.6em]"}`}>
                 {t("properties.opulentHaven")}
               </span>
@@ -108,7 +109,7 @@ function About() {
                 {t("properties.grandOakAddress")}
               </span>
               <Image src={house3 || "/placeholder.svg"} alt="House 3" className="h-full w-auto ml-[5%]" />
-            </div>
+            </div> */}
           </div>
 
           {/* Center Column - 28% */}
@@ -136,7 +137,7 @@ function About() {
 
           {/* Right Column - 40% */}
           <div className="w-[40%]">
-            <div className="flex h-2/3 mt-5">
+            {/* <div className="flex h-2/3 mt-5">
               <div className="h-full mr-[5%] relative">
                 <Image src={house1 || "/placeholder.svg"} alt="House 1" className="h-full w-auto" />
                 <div
@@ -170,7 +171,7 @@ function About() {
               <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }} className={`text-gray-500 text-sm ${isArabic ? "" : "tracking-[0.1em]"}`}>
                 {t("properties.serenityManorAddress")}
               </span>
-            </div>
+            </div> */}
             <div className="m-4 xl:m-8">
               <div className="mb-4">
                 <h1 className="text-2xl xl:text-4xl font-bold leading-tight">

@@ -225,7 +225,7 @@ export function Navbar() {
             >
               {t("services")}
             </a>
-            <a
+            {/* <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -234,7 +234,7 @@ export function Navbar() {
               className={`transition-colors ${activeSection === "portfolio" ? `${colors.active} font-bold underline underline-offset-6 decoration-2` : `${colors.secondary} ${colors.hover}`}`}
             >
               {t("portfolio")}
-            </a>
+            </a> */}
             <a
               href="#"
               onClick={(e) => {

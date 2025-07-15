@@ -11,46 +11,46 @@ function Footer() {
   const locale = useLocale();
 
   const footerLinks = {
-    product1: {
-      title: t("product"),
-      links: [
-        { name: t("links.features"), href: "#" },
-        { name: t("links.solutions"), href: "#" },
-        { name: t("links.pricing"), href: "#" },
-        { name: t("links.tutorials"), href: "#" },
-        { name: t("links.updates"), href: "#" },
-      ],
-    },
+    // product1: {
+    //   title: t("product"),
+    //   links: [
+    //     { name: t("links.features"), href: "#" },
+    //     { name: t("links.solutions"), href: "#" },
+    //     { name: t("links.pricing"), href: "#" },
+    //     { name: t("links.tutorials"), href: "#" },
+    //     { name: t("links.updates"), href: "#" },
+    //   ],
+    // },
     remaining1: {
       title: t("remaining"),
       links: [
-        { name: t("links.blog"), href: "#" },
-        { name: t("links.newsletter"), href: "#" },
-        { name: t("links.helpCentre"), href: "#" },
-        { name: t("links.careers"), href: "#" },
-        { name: t("links.support"), href: "#" },
+        { name: t("links.blog"), href: "/blog" },
+        // { name: t("links.newsletter"), href: "#" },
+        // { name: t("links.helpCentre"), href: "#" },
+        // { name: t("links.careers"), href: "#" },
+        // { name: t("links.support"), href: "#" },
       ],
     },
-    product2: {
-      title: t("product"),
-      links: [
-        { name: t("links.features"), href: "#" },
-        { name: t("links.solutions"), href: "#" },
-        { name: t("links.pricing"), href: "#" },
-        { name: t("links.tutorials"), href: "#" },
-        { name: t("links.updates"), href: "#" },
-      ],
-    },
-    remaining2: {
-      title: t("remaining"),
-      links: [
-        { name: t("links.blog"), href: "#" },
-        { name: t("links.newsletter"), href: "#" },
-        { name: t("links.helpCentre"), href: "#" },
-        { name: t("links.careers"), href: "#" },
-        { name: t("links.support"), href: "#" },
-      ],
-    },
+    // product2: {
+    //   title: t("product"),
+    //   links: [
+    //     { name: t("links.features"), href: "#" },
+    //     { name: t("links.solutions"), href: "#" },
+    //     { name: t("links.pricing"), href: "#" },
+    //     { name: t("links.tutorials"), href: "#" },
+    //     { name: t("links.updates"), href: "#" },
+    //   ],
+    // },
+    // remaining2: {
+    //   title: t("remaining"),
+    //   links: [
+    //     { name: t("links.blog"), href: "#" },
+    //     { name: t("links.newsletter"), href: "#" },
+    //     { name: t("links.helpCentre"), href: "#" },
+    //     { name: t("links.careers"), href: "#" },
+    //     { name: t("links.support"), href: "#" },
+    //   ],
+    // },
   };
 
   return (
