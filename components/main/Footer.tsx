@@ -128,10 +128,6 @@ function Footer() {
                   <MapPin size={20} />
                 </a>
               </div>
-              <div className="flex flex-col mt-6">
-                <span className="">(+966) 596824505</span>
-                <span className="">(+966) 597555556</span>
-              </div>
             </div>
 
             {/* Links Columns */}
