@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, MapPin, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 import Image from "next/image";
 import logoIcon from "@/public/100thlogo.png";
 import logoText from "@/public/100thlogotext.png";
@@ -11,46 +11,46 @@ function Footer() {
   const locale = useLocale();
 
   const footerLinks = {
-    product1: {
-      title: t("product"),
-      links: [
-        { name: t("links.features"), href: "#" },
-        { name: t("links.solutions"), href: "#" },
-        { name: t("links.pricing"), href: "#" },
-        { name: t("links.tutorials"), href: "#" },
-        { name: t("links.updates"), href: "#" },
-      ],
-    },
+    // product1: {
+    //   title: t("product"),
+    //   links: [
+    //     { name: t("links.features"), href: "#" },
+    //     { name: t("links.solutions"), href: "#" },
+    //     { name: t("links.pricing"), href: "#" },
+    //     { name: t("links.tutorials"), href: "#" },
+    //     { name: t("links.updates"), href: "#" },
+    //   ],
+    // },
     remaining1: {
       title: t("remaining"),
       links: [
-        { name: t("links.blog"), href: "#" },
-        { name: t("links.newsletter"), href: "#" },
-        { name: t("links.helpCentre"), href: "#" },
-        { name: t("links.careers"), href: "#" },
-        { name: t("links.support"), href: "#" },
+        { name: t("links.blog"), href: "/blog" },
+        // { name: t("links.newsletter"), href: "#" },
+        // { name: t("links.helpCentre"), href: "#" },
+        // { name: t("links.careers"), href: "#" },
+        // { name: t("links.support"), href: "#" },
       ],
     },
-    product2: {
-      title: t("product"),
-      links: [
-        { name: t("links.features"), href: "#" },
-        { name: t("links.solutions"), href: "#" },
-        { name: t("links.pricing"), href: "#" },
-        { name: t("links.tutorials"), href: "#" },
-        { name: t("links.updates"), href: "#" },
-      ],
-    },
-    remaining2: {
-      title: t("remaining"),
-      links: [
-        { name: t("links.blog"), href: "#" },
-        { name: t("links.newsletter"), href: "#" },
-        { name: t("links.helpCentre"), href: "#" },
-        { name: t("links.careers"), href: "#" },
-        { name: t("links.support"), href: "#" },
-      ],
-    },
+    // product2: {
+    //   title: t("product"),
+    //   links: [
+    //     { name: t("links.features"), href: "#" },
+    //     { name: t("links.solutions"), href: "#" },
+    //     { name: t("links.pricing"), href: "#" },
+    //     { name: t("links.tutorials"), href: "#" },
+    //     { name: t("links.updates"), href: "#" },
+    //   ],
+    // },
+    // remaining2: {
+    //   title: t("remaining"),
+    //   links: [
+    //     { name: t("links.blog"), href: "#" },
+    //     { name: t("links.newsletter"), href: "#" },
+    //     { name: t("links.helpCentre"), href: "#" },
+    //     { name: t("links.careers"), href: "#" },
+    //     { name: t("links.support"), href: "#" },
+    //   ],
+    // },
   };
 
   return (
@@ -71,12 +71,14 @@ function Footer() {
 
             {/* Social Media */}
             <div className="flex space-x-3 md:space-x-4 justify-center md:justify-start">
-              <a href="https://wa.me/966596824505" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-green-600 transition-colors relative">
-                <MessageCircle size={25} className="md:w-5 md:h-5" />
-                <Phone size={10} fill="white" className="md:w-3 md:h-3 absolute" />
+              <a href="#" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                <Facebook size={18} className="md:w-5 md:h-5" />
               </a>
-              <a href="https://maps.app.goo.gl/3DV4wzVCTJScNxT19?g_st=iw" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
-                <MapPin size={18} className="md:w-5 md:h-5" />
+              <a href="#" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors">
+                <Twitter size={18} className="md:w-5 md:h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors">
+                <Instagram size={18} className="md:w-5 md:h-5" />
               </a>
             </div>
             <div className="flex flex-col items-center mt-6">
@@ -120,12 +122,14 @@ function Footer() {
 
               {/* Social Media */}
               <div className="flex space-x-4">
-                <a href="https://wa.me/966596824505" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-green-600 transition-colors relative">
-                  <MessageCircle size={25} />
-                  <Phone size={12} fill="white" className="absolute" />
+                <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                  <Facebook size={20} />
                 </a>
-                <a href="https://maps.google.com/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
-                  <MapPin size={20} />
+                <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors">
+                  <Twitter size={20} />
+                </a>
+                <a href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-pink-600 transition-colors">
+                  <Instagram size={20} />
                 </a>
               </div>
             </div>
