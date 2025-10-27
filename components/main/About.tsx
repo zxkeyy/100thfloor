@@ -10,7 +10,8 @@ import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 
 function About() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileVideoOpen, setIsMobileVideoOpen] = useState(false);
+  const [isDesktopVideoOpen, setIsDesktopVideoOpen] = useState(false);
   const t = useTranslations("About");
   const locale = useLocale();
   const isArabic = locale === "ar";
@@ -65,7 +66,7 @@ function About() {
             <div className="relative aspect-[4/3] w-full">
               <Image src={house1 || "/placeholder.svg"} alt="House 1" fill className="object-cover rounded-lg" />
               <div className="absolute inset-0 bg-[#176B8799] rounded-lg" style={{ mixBlendMode: "normal" }} />
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <Dialog open={isMobileVideoOpen} onOpenChange={setIsMobileVideoOpen}>
                 <DialogTrigger asChild>
                   <div className="absolute inset-0 flex items-center justify-center cursor-pointer">
                     <CirclePlay className="w-12 h-12 md:w-16 md:h-16 text-white hover:text-primary transition-colors duration-300" />
@@ -73,7 +74,7 @@ function About() {
                 </DialogTrigger>
                 <DialogContent className="max-w-[95vw] md:max-w-4xl p-0 bg-black border-none">
                   <div className="aspect-video w-full">
-                    <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ${isOpen ? "?autoplay=1&" : "?"}rel=0&modestbranding=1&showinfo=0`} title="Property Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
+                    <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/es-aLJ3YPBg${isMobileVideoOpen ? "?autoplay=1&" : "?"}rel=0&modestbranding=1&showinfo=0`} title="Property Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
                   </div>
                 </DialogContent>
               </Dialog>
@@ -151,7 +152,7 @@ function About() {
                     pointerEvents: "none",
                   }}
                 />
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <Dialog open={isDesktopVideoOpen} onOpenChange={setIsDesktopVideoOpen}>
                   <DialogTrigger asChild>
                     <div className="absolute inset-0 flex items-center justify-center cursor-pointer">
                       <CirclePlay className="w-12 h-12 xl:w-16 xl:h-16 text-white hover:text-primary transition-colors duration-300" />
@@ -159,7 +160,7 @@ function About() {
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl p-0 bg-black border-none">
                     <div className="aspect-video w-full">
-                      <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ${isOpen ? "?autoplay=1&" : "?"}rel=0&modestbranding=1&showinfo=0`} title="Property Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
+                      <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/es-aLJ3YPBg${isDesktopVideoOpen ? "?autoplay=1&" : "?"}rel=0&modestbranding=1&showinfo=0`} title="Property Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
                     </div>
                   </DialogContent>
                 </Dialog>
